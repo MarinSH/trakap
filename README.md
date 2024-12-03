@@ -14,7 +14,7 @@
 ## Installation
 
 ```sh
-git clone https://github.com/alexisCode50/template-electron-react.git
+git clone https://github.com/MarinSH/app-trakap
 cd template-electron-react
 npm install
 npm start
