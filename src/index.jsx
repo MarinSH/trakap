@@ -9,6 +9,7 @@ import OfferEdit from './ui/pages/OfferEdit.jsx';
 import OfferView from './ui/pages/OfferView.jsx';
 import AppNavbar from './ui/components/AppNavbar.jsx';
 import { useEffect } from 'react';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const Index = () => {
   const navigate = useNavigate();

@@ -11,7 +11,6 @@ const createWindow = () => {
     width: 1920,
     height: 1080,
     autoHideMenuBar: true,
-    icon: join(__dirname, '../src/assets/logo/trakap.png'),
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },

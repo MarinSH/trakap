@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function OfferCard({ offer, onView, onEdit, onDelete, status }) {
+export default function OfferCard({ offer, onView, onEdit }) {
   const handleDragStart = (event) => {
     event.dataTransfer.setData('offerId', offer.id);
     event.target.style.opacity = 0.5;
@@ -16,40 +16,36 @@ export default function OfferCard({ offer, onView, onEdit, onDelete, status }) {
       draggable
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
+      onClick={() => onView(offer.id)}
     >
       <div className="p-4">
         <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-gray-100">{offer.offerName}</h3>
+          <h3 className="text-lg font-semibold text-gray-100">
+            <i className="fa-solid fa-bullhorn mr-2"></i>{offer.offerName}
+          </h3>
           <button
-            className="btn btn-secondary text-sm"
+            className="btn bg-gray-600 w-12 h-12 flex justify-center items-center rounded-full p-0 m-0"
+            style={{ fontSize: '16px' }}
             onClick={() => onEdit(offer.id)}
           >
-            Modifier
+            <i className="fa-solid fa-pen text-base "></i>
           </button>
         </div>
-        <p className="text-gray-200">{offer.companyName}</p>
-        <p className="text-sm">{offer.location}</p>
       </div>
 
-      <div className="border-t border-gray-600 p-4 flex justify-between items-center">
-        <button
-          className="btn btn-primary w-1/3 text-sm"
-          onClick={() => onView(offer.id)}
-        >
-          Voir
-        </button>
-        <button
-          className="btn btn-secondary w-1/3 text-sm"
-          onClick={() => onEdit(offer.id)}
-        >
-          Modifier
-        </button>
-        <button
-          className="btn btn-error w-1/3 text-sm"
-          onClick={() => onDelete(offer.id)}
-        >
-          Supprimer
-        </button>
+      <div className="border-t border-gray-600 p-4 flex flex-col justify-between items-start space-y-4">
+        <p className="text-gray-200">
+          <i className="fa fa-building mr-2"></i>{offer.companyName}
+        </p>
+        <p className="text-sm">
+        <i className="fa fa-location-arrow mr-2"></i>{offer.location}
+        </p>
+        <p className="text-sm"> 
+          <i className="fa-solid fa-sack-dollar mr-2"></i>{offer.salary}
+        </p>
+        <p className="text-sm"> 
+          <i className="fa-solid fa-address-card mr-2"></i>{offer.contactName}
+        </p>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { STATUS_LABELS } from '../../utils/config.js';
 
 export default function OfferList() {
   const [offers, setOffers] = useState([]);
+  const [collapsedColumns, setCollapsedColumns] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,11 +15,6 @@ export default function OfferList() {
   async function fetchOffers() {
     const fetchedOffers = await window.api.getOffers();
     setOffers(fetchedOffers);
-  }
-
-  async function deleteOffer(id) {
-    await window.api.deleteOffer(id);
-    setOffers(prevOffers => prevOffers.filter(offer => offer.id !== id));
   }
 
   const handleViewOffer = (id) => {
@@ -55,12 +51,19 @@ export default function OfferList() {
     event.preventDefault();
   };
 
+  const toggleCollapse = (status) => {
+    setCollapsedColumns(prevState => ({
+      ...prevState,
+      [status]: !prevState[status], // Change the collapsed state
+    }));
+  };
+
   const statusGradients = {
-    SENDING: 'bg-gradient-to-r from-primary-500 to-gray-750',
-    INTERVIEW: 'bg-gradient-to-r from-secondary-500 to-gray-750',
-    PENDING: 'bg-gradient-to-r from-gray-500 to-gray-750',
-    ACCEPTED: 'bg-gradient-to-r from-success-500 to-gray-750',
-    REJECTED: 'bg-gradient-to-r from-warning-500 to-gray-750',
+    SENDING: 'bg-gradient-to-r from-primary-500 to-primary-700',
+    INTERVIEW: 'bg-gradient-to-r from-secondary-500 to-secondary-700',
+    PENDING: 'bg-gradient-to-r from-gray-500 to-gray-700',
+    ACCEPTED: 'bg-gradient-to-r from-success-500 to-success-700',
+    REJECTED: 'bg-gradient-to-r from-warning-500 to-warning-700',
   };
 
   return (
@@ -72,25 +75,41 @@ export default function OfferList() {
           {Object.keys(STATUS_LABELS).map(status => (
             <div
               key={status}
-              className="kanban-column rounded-lg shadow-md w-1/4 min-h-[200px] border border-gray-600 transition-colors duration-300"
+              className={`kanban-column rounded-lg shadow-md ${collapsedColumns[status] ? 'w-24' : 'w-1/4'} flex flex-col border border-gray-600 transition-all duration-200`} 
               onDrop={(event) => handleDrop(event, status)}
               onDragOver={handleDragOver}
             >
-              <div className={`p-2 rounded-t-lg ${statusGradients[status]}`}>
-                <h2 className="text-xl font-semibold pl-4 mb-4 text-gray-100"> {STATUS_LABELS[status]}</h2>
+              <div className={`p-2 ${statusGradients[status]}  rounded-t-lg flex h-14 items-center justify-between border-b border-gray-600`}>
+                <h2 className="text-xl font-semibold pl-4 text-gray-100">
+                  {collapsedColumns[status] ? '' : STATUS_LABELS[status]}
+                </h2>
+                <button
+                  onClick={() => toggleCollapse(status)}
+                  className="text-gray-100 mr-6"
+                >
+                  <i className={`fa ${collapsedColumns[status] ? 'fa-chevron-right' : 'fa-chevron-left'}`}></i>
+                </button>
               </div>
-              <div className="kanban-cards m-4 space-y-4">
-                {groupedOffers[status]?.map(offer => (
-                  <OfferCard
-                    key={offer.id}
-                    offer={offer}
-                    onView={handleViewOffer}
-                    onEdit={handleEditOffer}
-                    onDelete={deleteOffer}
-                    onStatusChange={handleStatusChange}
-                    status={status}
-                  />
-                ))}
+
+              <div className="kanban-cards m-4 space-y-4 flex-1">
+                {collapsedColumns[status] ? (
+                  groupedOffers[status]?.length > 0 && (
+                    <p className="text-center text-gray-300">
+                      {groupedOffers[status]?.length} <i className="fa-solid fa-folder-open"></i>
+                    </p>
+                  )
+                ) : (
+                  groupedOffers[status]?.map(offer => (
+                    <OfferCard
+                      key={offer.id}
+                      offer={offer}
+                      onView={handleViewOffer}
+                      onEdit={handleEditOffer}
+                      onStatusChange={handleStatusChange}
+                      status={status}
+                    />
+                  ))
+                )}
               </div>
             </div>
           ))}
