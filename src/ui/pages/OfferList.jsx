@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import OfferCard from '../components/OfferCard.jsx';
+import { STATUS_LABELS } from '../../utils/config.js';
 
 export default function OfferList() {
   const [offers, setOffers] = useState([]);
@@ -54,21 +55,31 @@ export default function OfferList() {
     event.preventDefault();
   };
 
+  const statusGradients = {
+    SENDING: 'bg-gradient-to-r from-primary-500 to-gray-750',
+    INTERVIEW: 'bg-gradient-to-r from-secondary-500 to-gray-750',
+    PENDING: 'bg-gradient-to-r from-gray-500 to-gray-750',
+    ACCEPTED: 'bg-gradient-to-r from-success-500 to-gray-750',
+    REJECTED: 'bg-gradient-to-r from-warning-500 to-gray-750',
+  };
+
   return (
     <section className="py-8">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-bold mb-6">Kanban des offres</h1>
 
         <div className="flex justify-between space-x-4">
-          {['OPEN', 'INTERVIEW', 'OFFERED', 'HIRED'].map(status => (
+          {Object.keys(STATUS_LABELS).map(status => (
             <div
               key={status}
-              className="kanban-column p-4 rounded-lg shadow-md w-1/4 min-h-[200px] bg-white border-2 border-dashed hover:bg-gray-100 transition-colors duration-300"
+              className="kanban-column rounded-lg shadow-md w-1/4 min-h-[200px] border border-gray-600 transition-colors duration-300"
               onDrop={(event) => handleDrop(event, status)}
               onDragOver={handleDragOver}
             >
-              <h2 className="text-xl font-semibold text-center mb-4 text-gray-800">{status}</h2>
-              <div className="kanban-cards space-y-4">
+              <div className={`p-2 rounded-t-lg ${statusGradients[status]}`}>
+                <h2 className="text-xl font-semibold pl-4 mb-4 text-gray-100"> {STATUS_LABELS[status]}</h2>
+              </div>
+              <div className="kanban-cards m-4 space-y-4">
                 {groupedOffers[status]?.map(offer => (
                   <OfferCard
                     key={offer.id}

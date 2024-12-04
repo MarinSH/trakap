@@ -32,3 +32,11 @@ export const CONFIG_REMOTE_WORK = [
         label: 'Télétravail complet'
     }
 ];
+
+export const STATUS_LABELS = {
+    SENDING: 'Envoyé',
+    INTERVIEW: 'Contacté',
+    PENDING:  'Attente',
+    REJECTED:  'Refusé',
+    ACCEPTED: 'Accepté',
+};

@@ -17,7 +17,7 @@ export default function AppNavbar() {
                 </h1>
                 <div className="space-x-4">
                     {location.pathname !== '/offer' && (
-                        <Link to="/offer" className="btn btn-info">
+                        <Link to="/offer" className="btn btn-secondary">
                             Voir les offres
                         </Link>
                     )}

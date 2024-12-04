@@ -14,7 +14,7 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
     contactPhone: '',
     interviewDate: '',
     salary: '',
-    status: 'OPEN',
+    status: 'PENDING',
     notes: '',
     sendAt: today,
     techStack: [], 
@@ -84,7 +84,65 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+    {!isView && (
+        <button type="submit" className="btn btn-success w-full sm:w-auto">
+          {isEdit ? 'Modifier l\'offre' : 'Ajouter l\'offre'}
+        </button>
+      )}
+
+      <button type="button" onClick={handleCancel} className="btn btn-secondary w-full sm:w-auto mt-4">
+        {isView ? 'Retour' : 'Annuler'}
+      </button>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="space-y-2">
+        <label>Nom de l'entreprise :</label>
+        <input
+          type="text"
+          name="companyName"
+          value={offer.companyName}
+          onChange={handleInputChange}
+          className="input input-bordered w-full"
+          required
+          disabled={isView}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label>Nom de l'offre :</label>
+        <input
+          type="text"
+          name="offerName"
+          value={offer.offerName}
+          onChange={handleInputChange}
+          className="input input-bordered w-full"
+          disabled={isView}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label>Lieu :</label>
+        <input
+          type="text"
+          name="location"
+          value={offer.location}
+          onChange={handleInputChange}
+          className="input input-bordered w-full"
+          disabled={isView}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label>Salaire :</label>
+        <input
+          type="text"
+          name="salary"
+          value={offer.salary}
+          onChange={handleInputChange}
+          className="input input-bordered w-full"
+          disabled={isView}
+        />
+      </div>
+
       <div className="space-y-2">
           <label>Nom du contact :</label>
           <input
@@ -122,55 +180,6 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
         </div>
 
         <div className="space-y-2">
-          <label>Nom de l'entreprise :</label>
-          <input
-            type="text"
-            name="companyName"
-            value={offer.companyName}
-            onChange={handleInputChange}
-            className="input input-bordered w-full"
-            required
-            disabled={isView}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label>Nom de l'offre :</label>
-          <input
-            type="text"
-            name="offerName"
-            value={offer.offerName}
-            onChange={handleInputChange}
-            className="input input-bordered w-full"
-            disabled={isView}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label>Lieu :</label>
-          <input
-            type="text"
-            name="location"
-            value={offer.location}
-            onChange={handleInputChange}
-            className="input input-bordered w-full"
-            disabled={isView}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label>Salaire :</label>
-          <input
-            type="text"
-            name="salary"
-            value={offer.salary}
-            onChange={handleInputChange}
-            className="input input-bordered w-full"
-            disabled={isView}
-          />
-        </div>
-
-        <div className="space-y-2">
           <label>Notes :</label>
           <textarea
             name="notes"
@@ -180,26 +189,6 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
             disabled={isView}
           />
         </div>
-
-        {offer.imageData && isView ? (
-          <div className="space-y-2">
-            <label>Image de l'offre :</label>
-            <img src={offer.imageData} alt="Offer" className="w-full" />
-          </div>
-        ) : (
-          !isView && (
-            <div className="space-y-2">
-              <label>Image de l'offre :</label>
-              <input
-                type="file"
-                name="image"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="input input-bordered w-full"
-              />
-            </div>
-          )
-        )}
 
         <div className="space-y-2">
           <label>Travail à distance :</label>
@@ -261,17 +250,29 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
             disabled={isView}
           />
         </div>
+
+        {offer.imageData && isView ? (
+          <div className="space-y-2">
+            <label>Image de l'offre :</label>
+            <img src={offer.imageData} alt="Offer" className="w-full" />
+          </div>
+        ) : (
+          !isView && (
+            <div className="space-y-2">
+              <label>Image de l'offre :</label>
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="input input-bordered w-full"
+              />
+            </div>
+          )
+        )}
       </div>
 
-      {!isView && (
-        <button type="submit" className="btn btn-success w-full sm:w-auto">
-          {isEdit ? 'Modifier l\'offre' : 'Ajouter l\'offre'}
-        </button>
-      )}
-
-      <button type="button" onClick={handleCancel} className="btn btn-secondary w-full sm:w-auto mt-4">
-        {isView ? 'Retour' : 'Annuler'}
-      </button>
+      
     </form>
   );
 };
