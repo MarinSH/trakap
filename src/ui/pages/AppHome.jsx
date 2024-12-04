@@ -9,7 +9,7 @@ export default function AppHome() {
     useEffect(() => {
         const checkStoredDirectory = async () => {
             try {
-                const storedDirectory = await window.api.checkDirectoryOffers();
+                const storedDirectory = await window.api.checkDirectory();
                 if (storedDirectory) {
                     setStoredDirectoryPath(storedDirectory);
                     setDirectoryChosen(true);
@@ -25,7 +25,7 @@ export default function AppHome() {
     }, []);
 
     async function chooseDirectory() {
-        const directoryPath = await window.api.selectDirectoryOffers();
+        const directoryPath = await window.api.selectDirectory();
         if (directoryPath) {
             setStoredDirectoryPath(directoryPath);
             setDirectoryChosen(true);
@@ -33,8 +33,8 @@ export default function AppHome() {
     }
 
     async function resetDirectory() {
-        await window.api.resetDirectoryOffers();
-        const storedDirectory = await window.api.checkDirectoryOffers();
+        await window.api.resetDirectory();
+        const storedDirectory = await window.api.checkDirectory();
         if (storedDirectory) {
             setStoredDirectoryPath(storedDirectory);
             setDirectoryChosen(true);

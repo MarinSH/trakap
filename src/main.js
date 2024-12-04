@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require('electron');
-const { ipcLoader } = require('./handlers/offer');
+import { ipcDirectory } from './handlers/directory';
+import { ipcOffer } from './handlers/offer';
 
 if (require('electron-squirrel-startup')) {
   app.quit();
@@ -20,7 +21,8 @@ const createWindow = () => {
 };
 
 app.whenReady().then(async () => {
-  ipcLoader();
+  ipcDirectory();
+  ipcOffer();
   createWindow();
 
   app.on('activate', () => {
