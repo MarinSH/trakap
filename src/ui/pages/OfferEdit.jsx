@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { OfferForm } from '../components/OfferForm.jsx';
 
-export default function OfferEdit({ offerId }) {
+export default function OfferEdit() {
+  const { offerId } = useParams();
   const [offer, setOffer] = useState(null);
 
   useEffect(() => {
     const fetchOffer = async () => {
-      try {
-        const fetchedOffer = await window.api.getOffers();
-        setOffer(fetchedOffer.find(offer => offer.id === offerId));
-      } catch (error) {
-        console.error('Error when retrieving offer:', error);
-      }
+        try {
+            const fetchedOffer = await window.api.getOfferById(offerId);
+            setOffer(fetchedOffer);
+        } catch (error) {
+            console.error('Error when retrieving offer by ID:', error);
+        }
     };
-    fetchOffer();
-  }, [offerId]);
+
+    if (offerId) {
+        fetchOffer();
+    }
+}, [offerId]);
 
   const handleUpdateOffer = async (updatedOffer) => {
     try {

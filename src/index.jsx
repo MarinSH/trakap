@@ -15,8 +15,8 @@ root.render(
         <Route path="/" element={<AppHome />} />
         <Route path="/offer" element={<OfferList />} />
         <Route path="/offer/new" element={<OfferAdd />} />
-        <Route path="/offer/edit/:id" element={<OfferEdit />} />
-        <Route path="/offer/view/:id" element={<OfferView />} />
+        <Route path="/offer/edit/:offerId" element={<OfferEdit />} />
+        <Route path="/offer/view/:offerId" element={<OfferView />} />
     </Routes>
 </HashRouter>
 );
