@@ -19,6 +19,7 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
     sendAt: today,
     techStack: [], 
     remoteWork: CONFIG_REMOTE_WORK[0].value,
+    imageData: '',
     ...offerData
   });
 
@@ -51,10 +52,28 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
     }));
   };
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setOffer(prevState => ({
+          ...prevState,
+          imageData: reader.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!isView) {
-      onSubmit(offer);
+      const formData = { ...offer };
+      if (offer.imageData) {
+        formData.imageData = offer.imageData;
+      }
+      onSubmit(formData);
       navigate('/offer');
     }
   };
@@ -161,6 +180,26 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
             disabled={isView}
           />
         </div>
+
+        {offer.imageData && isView ? (
+          <div className="space-y-2">
+            <label>Image de l'offre :</label>
+            <img src={offer.imageData} alt="Offer" className="w-full" />
+          </div>
+        ) : (
+          !isView && (
+            <div className="space-y-2">
+              <label>Image de l'offre :</label>
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="input input-bordered w-full"
+              />
+            </div>
+          )
+        )}
 
         <div className="space-y-2">
           <label>Travail à distance :</label>

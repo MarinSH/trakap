@@ -29,20 +29,30 @@ export function ipcOffer() {
         }
     });
 
-    ipcMain.handle('add-offer', (event, offer) => {
+    ipcMain.handle('add-offer', async (event, offerData) => {
         try {
-            const data = fileLoad();
-
-            if (!offer.id) {
-                offer.id = uuidv4();
-            }
-
-            data.offers.push(offer);
-            fileSave(data);
-            return offer;
+          const data = fileLoad();
+          let offer = { ...offerData };
+      
+          if (offer.image) {
+            const base64Data = offer.image.replace(/^data:image\/\w+;base64,/, '');
+            offer.imageData = base64Data;
+            delete offer.image;
+          }
+      
+          if (!offer.id) {
+            offer.id = uuidv4();
+          }
+      
+          offer = { id: offer.id, ...offer };
+      
+          data.offers.push(offer);
+          fileSave(data);
+      
+          return offer;
         } catch (error) {
-            console.error('Error in add-offer:', error);
-            throw error;
+          console.error('Error in add-offer:', error);
+          throw error;
         }
     });
 

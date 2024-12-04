@@ -1,5 +1,7 @@
 import fs from 'fs';
 import Store from 'electron-store';
+import { app } from 'electron';
+import path from 'path';
 
 export function fileLoad() {
     const store = new Store();

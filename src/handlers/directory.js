@@ -42,7 +42,6 @@ export function ipcDirectory() {
             const trakapDirectory = path.join(selectedDirectory, 'Trakap');
             const newDataPath = path.join(trakapDirectory, 'trakap-data.json');
     
-
             if (!fs.existsSync(trakapDirectory)) {
                 fs.mkdirSync(trakapDirectory);
             }
@@ -54,7 +53,7 @@ export function ipcDirectory() {
             store.set('dataPath', newDataPath);
             return newDataPath;
         } catch (error) {
-            console.error('Error in directory-offers:', error);
+            console.error('Error in select-directory-offers:', error);
             throw error;
         }
     });
@@ -102,5 +101,5 @@ export function ipcDirectory() {
             console.error('Error in reset-directory-offers:', error);
             throw error;
         }
-    });
+    }); 
 }
