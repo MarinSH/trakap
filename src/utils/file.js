@@ -1,7 +1,7 @@
 import fs from 'fs';
 import Store from 'electron-store';
 
-export function jsonLoad() {
+export function fileLoad() {
     const store = new Store();
     const dataPath = store.get('dataPath');
 
@@ -18,7 +18,7 @@ export function jsonLoad() {
     }
 }
 
-export function jsonSave(data) {
+export function fileSave(data) {
     const store = new Store();
     const dataPath = store.get('dataPath');
     

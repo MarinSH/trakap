@@ -1,5 +1,5 @@
 import { dialog, ipcMain } from 'electron';
-import { jsonLoad, jsonSave } from "../utils/json";
+import { fileLoad, fileSave } from "../utils/file";
 import fs from 'fs';
 import path from 'path';
 import Store from 'electron-store';
@@ -35,20 +35,25 @@ export function ipcLoader() {
             const result = await dialog.showOpenDialog({
                 properties: ['openDirectory'],
             });
-
+    
             if (result.canceled) {
                 return null;
             }
-
+    
             const selectedDirectory = result.filePaths[0];
-            const newDataPath = path.join(selectedDirectory, 'trakap-data.json');
+            const trakapDirectory = path.join(selectedDirectory, 'Trakap');
+            const newDataPath = path.join(trakapDirectory, 'trakap-data.json');
+    
 
-            store.set('dataPath', newDataPath);
-
+            if (!fs.existsSync(trakapDirectory)) {
+                fs.mkdirSync(trakapDirectory);
+            }
+    
             if (!fs.existsSync(newDataPath)) {
                 fs.writeFileSync(newDataPath, JSON.stringify({ offers: [] }, null, 2));
             }
-
+    
+            store.set('dataPath', newDataPath);
             return newDataPath;
         } catch (error) {
             console.error('Error in directory-offers:', error);
@@ -71,29 +76,39 @@ export function ipcLoader() {
             if (!currentDataPath) {
                 throw new Error('No directory path found to reset.');
             }
-
+    
             const result = await dialog.showOpenDialog({
                 properties: ['openDirectory'],
             });
-
+    
             if (result.canceled) {
                 return;
             }
-
+    
             const newDirectory = result.filePaths[0];
-            const newDataPath = path.join(newDirectory, 'trakap-data.json');
-
+            const trakapDirectory = path.join(newDirectory, 'Trakap');
+            const newDataPath = path.join(trakapDirectory, 'trakap-data.json');
+    
+            if (fs.existsSync(newDataPath)) {
+                store.set('dataPath', newDataPath);
+                return;
+            }
+    
+            if (!fs.existsSync(trakapDirectory)) {
+                fs.mkdirSync(trakapDirectory);
+            }
+    
             if (fs.existsSync(currentDataPath)) {
                 const currentFilePath = path.join(path.dirname(currentDataPath), 'trakap-data.json');
-                
-                if (fs.existsSync(newDataPath)) {
-                    throw new Error('Data file already exists in the new directory.');
-                }
-
                 fs.renameSync(currentFilePath, newDataPath);
             }
-
+    
             store.set('dataPath', newDataPath);
+    
+            const oldTrakapDirectory = path.dirname(currentDataPath);
+            if (fs.existsSync(oldTrakapDirectory) && fs.readdirSync(oldTrakapDirectory).length === 0) {
+                fs.rmdirSync(oldTrakapDirectory);
+            }
         } catch (error) {
             console.error('Error in reset-directory-offers:', error);
             throw error;
@@ -102,7 +117,7 @@ export function ipcLoader() {
 
     ipcMain.handle('get-offers', () => {
         try {
-            const data = jsonLoad();
+            const data = fileLoad();
             return data.offers;
         } catch (error) {
             console.error('Error in get-offers:', error);
@@ -112,7 +127,7 @@ export function ipcLoader() {
 
     ipcMain.handle('get-offer-by-id', (event, offerId) => {
         try {
-            const data = jsonLoad();
+            const data = fileLoad();
             const offer = data.offers.find(offer => offer.id === offerId);
 
             if (!offer) {
@@ -128,14 +143,14 @@ export function ipcLoader() {
 
     ipcMain.handle('add-offer', (event, offer) => {
         try {
-            const data = jsonLoad();
+            const data = fileLoad();
 
             if (!offer.id) {
                 offer.id = uuidv4();
             }
 
             data.offers.push(offer);
-            jsonSave(data);
+            fileSave(data);
             return offer;
         } catch (error) {
             console.error('Error in add-offer:', error);
@@ -145,15 +160,15 @@ export function ipcLoader() {
 
     ipcMain.handle('update-offer', (event, updatedOffer) => {
         try {
-            const data = jsonLoad();
+            const data = fileLoad();
             const index = data.offers.findIndex(offer => offer.id === updatedOffer.id);
-
+    
             if (index === -1) {
                 throw new Error(`Offer with ID ${updatedOffer.id} not found.`);
             }
 
-            data.offers[index] = updatedOffer;
-            jsonSave(data);
+            data.offers[index] = { ...data.offers[index], ...updatedOffer };
+            fileSave(data);
             return updatedOffer;
         } catch (error) {
             console.error('Error in update-offer:', error);
@@ -163,7 +178,7 @@ export function ipcLoader() {
 
     ipcMain.handle('delete-offer', (event, offerId) => {
         try {
-            const data = jsonLoad();
+            const data = fileLoad();
             const index = data.offers.findIndex(offer => offer.id === offerId);
 
             if (index === -1) {
@@ -171,7 +186,7 @@ export function ipcLoader() {
             }
 
             const deletedOffer = data.offers.splice(index, 1);
-            jsonSave(data);
+            fileSave(data);
             return deletedOffer[0];
         } catch (error) {
             console.error('Error in delete-offer:', error);

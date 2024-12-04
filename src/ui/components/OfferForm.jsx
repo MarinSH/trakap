@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CONFIG_TECH_STACK, CONFIG_REMOTE_WORK } from '../../utils/config';
 
 export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = false }) => {
+  const today = new Date().toISOString().split('T')[0];
+
   const [offer, setOffer] = useState({
     companyName: '',
     offerName: '',
@@ -13,14 +16,13 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
     salary: '',
     status: 'OPEN',
     notes: '',
-    sendAt: '',
-    techStack: [],
-    remoteWork: 'ONSITE',
+    sendAt: today,
+    techStack: [], 
+    remoteWork: CONFIG_REMOTE_WORK[0].value,
     ...offerData
   });
 
   const navigate = useNavigate();
-
   const previousOfferDataRef = useRef(offerData);
 
   useEffect(() => {
@@ -64,6 +66,42 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
   return (
     <form onSubmit={handleSubmit} className="space-y-6 mt-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="space-y-2">
+          <label>Nom du contact :</label>
+          <input
+            type="text"
+            name="contactName"
+            value={offer.contactName}
+            onChange={handleInputChange}
+            className="input input-bordered w-full"
+            disabled={isView}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label>Email du contact :</label>
+          <input
+            type="email"
+            name="contactEmail"
+            value={offer.contactEmail}
+            onChange={handleInputChange}
+            className="input input-bordered w-full"
+            disabled={isView}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label>Téléphone du contact :</label>
+          <input
+            type="tel"
+            name="contactPhone"
+            value={offer.contactPhone}
+            onChange={handleInputChange}
+            className="input input-bordered w-full"
+            disabled={isView}
+          />
+        </div>
+
         <div className="space-y-2">
           <label>Nom de l'entreprise :</label>
           <input
@@ -76,6 +114,7 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
             disabled={isView}
           />
         </div>
+
         <div className="space-y-2">
           <label>Nom de l'offre :</label>
           <input
@@ -87,6 +126,7 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
             disabled={isView}
           />
         </div>
+
         <div className="space-y-2">
           <label>Lieu :</label>
           <input
@@ -98,50 +138,7 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
             disabled={isView}
           />
         </div>
-        <div className="space-y-2">
-          <label>Nom du contact :</label>
-          <input
-            type="text"
-            name="contactName"
-            value={offer.contactName}
-            onChange={handleInputChange}
-            className="input input-bordered w-full"
-            disabled={isView}
-          />
-        </div>
-        <div className="space-y-2">
-          <label>Email du contact :</label>
-          <input
-            type="email"
-            name="contactEmail"
-            value={offer.contactEmail}
-            onChange={handleInputChange}
-            className="input input-bordered w-full"
-            disabled={isView}
-          />
-        </div>
-        <div className="space-y-2">
-          <label>Téléphone du contact :</label>
-          <input
-            type="tel"
-            name="contactPhone"
-            value={offer.contactPhone}
-            onChange={handleInputChange}
-            className="input input-bordered w-full"
-            disabled={isView}
-          />
-        </div>
-        <div className="space-y-2">
-          <label>Date de l'entretien :</label>
-          <input
-            type="date"
-            name="interviewDate"
-            value={offer.interviewDate}
-            onChange={handleInputChange}
-            className="input input-bordered w-full"
-            disabled={isView}
-          />
-        </div>
+
         <div className="space-y-2">
           <label>Salaire :</label>
           <input
@@ -153,19 +150,7 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
             disabled={isView}
           />
         </div>
-        <div className="space-y-2">
-          <label>Status :</label>
-          <select
-            name="status"
-            value={offer.status}
-            onChange={handleInputChange}
-            className="input input-bordered w-full"
-            disabled={isView}
-          >
-            <option value="OPEN">Ouvert</option>
-            <option value="CLOSED">Fermé</option>
-          </select>
-        </div>
+
         <div className="space-y-2">
           <label>Notes :</label>
           <textarea
@@ -176,10 +161,40 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
             disabled={isView}
           />
         </div>
-        <div className="space-y-2 col-span-2">
+
+        <div className="space-y-2">
+          <label>Travail à distance :</label>
+          <select
+            name="remoteWork"
+            value={offer.remoteWork}
+            onChange={handleInputChange}
+            className="input input-bordered w-full"
+            disabled={isView}
+          >
+            {CONFIG_REMOTE_WORK.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        
+        <div className="space-y-2">
+          <label>Date de l'entretien :</label>
+          <input
+            type="date"
+            name="interviewDate"
+            value={offer.interviewDate}
+            onChange={handleInputChange}
+            className="input input-bordered w-full"
+            disabled={isView}
+          />
+        </div>
+
+        <div className="space-y-2">
           <label>Technologies utilisées :</label>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {['ANGULAR', 'SYMFONY', 'REACT', 'VUE', 'DOCKER'].map((tech) => (
+            {CONFIG_TECH_STACK.map((tech) => (
               <label key={tech} className="inline-flex items-center">
                 <input
                   type="checkbox"
@@ -195,22 +210,17 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
             ))}
           </div>
         </div>
-        <div className="space-y-2 col-span-2">
-          <label>Travail à distance :</label>
-          <select
-            name="remoteWork"
-            value={offer.remoteWork}
+
+        <div className="space-y-2">
+          <label>Date d'envoi :</label>
+          <input
+            type="date"
+            name="sendAt"
+            value={offer.sendAt}
             onChange={handleInputChange}
             className="input input-bordered w-full"
             disabled={isView}
-          >
-            <option value="ONSITE">Pas de télétravail</option>
-            <option value="ONEDAY">1 jour de télétravail</option>
-            <option value="TWODAY">2 jours de télétravail</option>
-            <option value="THREEDAY">3 jours de télétravail</option>
-            <option value="FOURDAY">4 jours de télétravail</option>
-            <option value="ALLDAY">Télétravail complet</option>
-          </select>
+          />
         </div>
       </div>
 
