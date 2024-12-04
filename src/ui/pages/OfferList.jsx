@@ -20,10 +20,6 @@ export default function OfferList() {
     setOffers(prevOffers => prevOffers.filter(offer => offer.id !== id));
   }
 
-  const handleAddOffer = () => {
-    navigate('/offer/new');
-  };
-
   const handleViewOffer = (id) => {
     navigate(`/offer/view/${id}`);
   };
@@ -33,13 +29,10 @@ export default function OfferList() {
   };
 
   return (
-    <section className="bg-gray-50 min-h-screen py-8">
+    <section className="py-8">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">Liste des offres</h1>
-          <button className="btn btn-success" onClick={handleAddOffer}>
-            Ajouter une offre
-          </button>
         </div>
 
         {offers.length > 0 ? (
@@ -55,7 +48,7 @@ export default function OfferList() {
             ))}
           </div>
         ) : (
-          <p className="text-center text-gray-600 mt-12">
+          <p className="text-center mt-12">
             Aucune offre sauvegardée pour le moment 🙁
           </p>
         )}

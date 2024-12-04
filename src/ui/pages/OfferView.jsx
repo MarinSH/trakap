@@ -19,7 +19,7 @@ export default function OfferView() {
     if (offerId) {
         fetchOffer();
     }
-}, [offerId]);
+  }, [offerId]);
 
   if (!offer) {
     return (
@@ -30,9 +30,14 @@ export default function OfferView() {
   }
 
   return (
-    <div>
-      <h1>Détails de l'offre</h1>
-      <OfferForm offerData={offer} isEdit={false} isView={true} />
-    </div>
+    <section className="py-8">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">Détails de l'offre</h1>
+        </div>
+
+        <OfferForm offerData={offer} isEdit={false} isView={true} />
+      </div>
+    </section>
   );
 }

@@ -19,7 +19,7 @@ export default function OfferEdit() {
     if (offerId) {
         fetchOffer();
     }
-}, [offerId]);
+  }, [offerId]);
 
   const handleUpdateOffer = async (updatedOffer) => {
     try {
@@ -38,9 +38,14 @@ export default function OfferEdit() {
   }
 
   return (
-    <div>
-      <h1>Modifier l'offre</h1>
-      <OfferForm offerData={offer} onSubmit={handleUpdateOffer} isEdit={true} isView={false} />
-    </div>
+    <section className="py-8">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">Modifier l'offre</h1>
+        </div>
+
+        <OfferForm offerData={offer} onSubmit={handleUpdateOffer} isEdit={true} isView={false} />
+      </div>
+    </section>
   );
 }

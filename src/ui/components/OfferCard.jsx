@@ -2,11 +2,11 @@ import React from 'react';
 
 export default function OfferCard({ offer, onView, onEdit, onDelete }) {
   return (
-    <div className="bg-gray shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
+    <div className="shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-800">{offer.offerName}</h3>
+        <h3 className="text-lg font-semibold">{offer.offerName}</h3>
         <p className="text-gray-600">{offer.companyName}</p>
-        <p className="text-sm text-gray-500">{offer.location}</p>
+        <p className="text-sm">{offer.location}</p>
       </div>
 
       <div className="border-t p-4 flex justify-between items-center">

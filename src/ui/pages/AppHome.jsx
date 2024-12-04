@@ -3,13 +3,21 @@ import { useNavigate } from 'react-router-dom';
 
 export default function AppHome() {
     const [directoryChosen, setDirectoryChosen] = useState(false);
+    const [storedDirectoryPath, setStoredDirectoryPath] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         const checkStoredDirectory = async () => {
-            const storedDirectoryPath = await window.api.getDirectoryOffers();
-            if (storedDirectoryPath) {
-                setDirectoryChosen(true);
+            try {
+                const storedDirectory = await window.api.checkDirectoryOffers();
+                if (storedDirectory) {
+                    setStoredDirectoryPath(storedDirectory);
+                    setDirectoryChosen(true);
+                } else {
+                    setDirectoryChosen(false);
+                }
+            } catch (error) {
+                console.error('Erreur lors de la vérification du répertoire :', error);
             }
         };
 
@@ -17,15 +25,22 @@ export default function AppHome() {
     }, []);
 
     async function chooseDirectory() {
-        const directoryPath = await window.api.directoryOffers();
+        const directoryPath = await window.api.selectDirectoryOffers();
         if (directoryPath) {
+            setStoredDirectoryPath(directoryPath);
             setDirectoryChosen(true);
         }
     }
 
     async function resetDirectory() {
         await window.api.resetDirectoryOffers();
-        setDirectoryChosen(false);
+        const storedDirectory = await window.api.checkDirectoryOffers();
+        if (storedDirectory) {
+            setStoredDirectoryPath(storedDirectory);
+            setDirectoryChosen(true);
+        } else {
+            setDirectoryChosen(false);
+        }
     }
 
     function goToOffers() {
@@ -33,7 +48,7 @@ export default function AppHome() {
     }
 
     return (
-        <section className="bg-gray-50">
+        <section>
             <div className="mx-auto max-w-screen-xl px-4 py-32 flex h-screen items-center">
                 <div className="mx-auto max-w-xl text-center">
                     <h1 className="text-3xl font-extrabold sm:text-5xl"> Trakap </h1>
@@ -51,11 +66,11 @@ export default function AppHome() {
                     ) : (
                         <>
                             <p className="mt-4 sm:text-xl/relaxed">
-                                Vous avez sélectionné un répertoire, vous pouvez donc maintenant utiliser Trakap 🎉
+                                Vous avez sélectionné ce répertoire : <strong>{storedDirectoryPath}</strong>, vous pouvez donc maintenant utiliser Trakap 🎉
                             </p>
                             <div className="mt-8 flex flex-wrap justify-center gap-4">
                                 <button className="btn btn-primary" onClick={goToOffers}>
-                                    Voir les offres
+                                    Voir mes offres
                                 </button>
                                 <button className="btn btn-secondary" onClick={resetDirectory}>
                                     Réinitialiser le répertoire

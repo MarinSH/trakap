@@ -8,7 +8,29 @@ import { v4 as uuidv4 } from 'uuid';
 export function ipcLoader() {
     const store = new Store();
 
-    ipcMain.handle('directory-offers', async () => {
+    ipcMain.handle('check-directory-offers', async () => {
+        try {
+            const storedDirectoryPath = store.get('dataPath', null);
+
+            if (!storedDirectoryPath) {
+                return null;
+            }
+
+            const dataFilePath = path.join(path.dirname(storedDirectoryPath), 'trakap-data.json');
+
+            if (fs.existsSync(dataFilePath)) {
+                return storedDirectoryPath;
+            } else {
+                store.delete('dataPath');
+                return null;
+            }
+        } catch (error) {
+            console.error('Error in check-directory-offers:', error);
+            throw error;
+        }
+    });
+
+    ipcMain.handle('select-directory-offers', async () => {
         try {
             const result = await dialog.showOpenDialog({
                 properties: ['openDirectory'],
@@ -43,9 +65,35 @@ export function ipcLoader() {
         }
     });
 
-    ipcMain.handle('reset-directory-offers', () => {
+    ipcMain.handle('reset-directory-offers', async () => {
         try {
-            store.delete('dataPath');
+            const currentDataPath = store.get('dataPath');
+            if (!currentDataPath) {
+                throw new Error('No directory path found to reset.');
+            }
+
+            const result = await dialog.showOpenDialog({
+                properties: ['openDirectory'],
+            });
+
+            if (result.canceled) {
+                return;
+            }
+
+            const newDirectory = result.filePaths[0];
+            const newDataPath = path.join(newDirectory, 'trakap-data.json');
+
+            if (fs.existsSync(currentDataPath)) {
+                const currentFilePath = path.join(path.dirname(currentDataPath), 'trakap-data.json');
+                
+                if (fs.existsSync(newDataPath)) {
+                    throw new Error('Data file already exists in the new directory.');
+                }
+
+                fs.renameSync(currentFilePath, newDataPath);
+            }
+
+            store.set('dataPath', newDataPath);
         } catch (error) {
             console.error('Error in reset-directory-offers:', error);
             throw error;

@@ -7,10 +7,12 @@ import OfferAdd from './ui/pages/OfferAdd.jsx';
 import OfferList from './ui/pages/OfferList.jsx';
 import OfferEdit from './ui/pages/OfferEdit.jsx';
 import OfferView from './ui/pages/OfferView.jsx';
+import AppNavbar from './ui/components/AppNavbar.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <HashRouter>
+    <AppNavbar />
     <Routes>
         <Route path="/" element={<AppHome />} />
         <Route path="/offer" element={<OfferList />} />
