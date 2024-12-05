@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import OfferCard from '../components/OfferCard.jsx';
-import { STATUS_LABELS } from '../../utils/config.js';
+import { CONFIG_REMOTE_WORK, STATUS_LABELS, CONTRACT_TYPES, CONFIG_TECH_STACK } from '../../utils/config.js';
+import RemoteWorkSelect from '../components/RemoteWorkSelect.jsx';
+import TechStackSelect from '../components/TechStackSelect.jsx';
 
 export default function OfferList() {
   const [offers, setOffers] = useState([]);
   const [collapsedColumns, setCollapsedColumns] = useState({});
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedRemoteWork, setSelectedRemoteWork] = useState('');
+  const [selectedContractType, setSelectedContractType] = useState('');
+  const [selectedTechStack, setSelectedTechStack] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,9 +22,7 @@ export default function OfferList() {
     const fetchedOffers = await window.api.getOffers();
     setOffers(fetchedOffers);
 
-    // Initialisation de l'état collapsedColumns en fonction des colonnes vides
     const initialCollapsedState = Object.keys(STATUS_LABELS).reduce((acc, status) => {
-      // Si la colonne est vide, elle sera minimisée par défaut
       acc[status] = fetchedOffers.filter(offer => offer.status === status).length === 0;
       return acc;
     }, {});
@@ -43,14 +47,6 @@ export default function OfferList() {
     }
   };
 
-  const groupedOffers = offers.reduce((acc, offer) => {
-    if (!acc[offer.status]) {
-      acc[offer.status] = [];
-    }
-    acc[offer.status].push(offer);
-    return acc;
-  }, {});
-
   const handleDrop = (event, newStatus) => {
     const offerId = event.dataTransfer.getData('offerId');
     handleStatusChange(offerId, newStatus);
@@ -63,8 +59,15 @@ export default function OfferList() {
   const toggleCollapse = (status) => {
     setCollapsedColumns(prevState => ({
       ...prevState,
-      [status]: !prevState[status], // Change the collapsed state
+      [status]: !prevState[status],
     }));
+  };
+
+  const resetFilters = () => {
+    setSearchQuery('');
+    setSelectedRemoteWork('');
+    setSelectedContractType('');
+    setSelectedTechStack('');
   };
 
   const statusGradients = {
@@ -75,10 +78,83 @@ export default function OfferList() {
     REJECTED: 'bg-gradient-to-r from-warning-500 to-warning-700',
   };
 
+  const filteredOffers = offers.filter(offer => {
+    return (
+      (searchQuery === '' || 
+        offer.companyName.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        offer.offerName.toLowerCase().includes(searchQuery.toLowerCase())) &&
+      (selectedRemoteWork === '' || offer.remoteWork === selectedRemoteWork) &&
+      (selectedContractType === '' || offer.contractType === selectedContractType) &&
+      (selectedTechStack === '' || offer.techStack.includes(selectedTechStack))
+    );
+  });
+
+  const groupedOffers = filteredOffers.reduce((acc, offer) => {
+    if (!acc[offer.status]) {
+      acc[offer.status] = [];
+    }
+    acc[offer.status].push(offer);
+    return acc;
+  }, {});
   return (
     <section className="py-8">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-bold mb-6">Kanban des offres</h1>
+
+        <div className="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div>
+            <button
+              onClick={resetFilters}
+              className="btn bg-gradient-to-r from-primary-500 to-secondary-500"
+            >
+              <i className="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Recherche par nom d'entreprise ou poste"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="input input-bordered w-full"
+            />
+          </div>
+          <div>
+          <RemoteWorkSelect 
+            value={selectedRemoteWork}
+            onChange={(value) => setSelectedRemoteWork(value)}
+          />
+          </div>
+          <div>
+            <select
+              value={selectedContractType}
+              onChange={(e) => setSelectedContractType(e.target.value)}
+              className="select select-bordered w-full"
+            >
+              <option value="">Type de contrat</option>
+              {CONTRACT_TYPES.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <select
+              value={selectedTechStack}
+              onChange={(e) => setSelectedTechStack(e.target.value)}
+              className="select select-bordered w-full"
+            >
+              <option value="">Stack technique</option>
+              {CONFIG_TECH_STACK.map(option => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+        </div>
 
         <div className="flex justify-between space-x-4">
           {Object.keys(STATUS_LABELS).map(status => (

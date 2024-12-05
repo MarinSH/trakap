@@ -47,13 +47,13 @@ export default function OfferView() {
       <h1 className="text-3xl font-bold">Détails de l'offre</h1>
       <div className="ml-auto flex space-x-2">
         <button
-          className="btn btn-secondary text-sm"
+          className="btn bg-gradient-to-r from-primary-500 to-secondary-500 text-sm"
           onClick={() => handleEditOffer(offer.id)}
         >
           <i className="fa-solid fa-pen"></i>
         </button>
         <button
-          className="btn btn-error text-sm"
+          className="btn bg-gradient-to-r from-warning-500 to-warning-700 text-sm"
           onClick={() => deleteOffer(offer.id)}
         >
           <i className="fa-solid fa-trash"></i>

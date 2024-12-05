@@ -22,7 +22,6 @@ const RemoteWorkSelect = ({ value, onChange, isView }) => {
 
   return (
     <div>
-      <label className="block text-base text-[#F8F6FE] mb-2">Télétravail :</label>
       {isView ? (
         <span className="text-[#7b6f9f]">
           {options.find(option => option.value === value)?.label}
@@ -33,6 +32,7 @@ const RemoteWorkSelect = ({ value, onChange, isView }) => {
           onChange={handleChange}
           options={options}
           classNamePrefix="react-select"
+          placeholder='Télétravail'
           styles={{
             control: (provided, state) => ({
               ...provided,

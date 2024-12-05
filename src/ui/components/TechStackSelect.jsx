@@ -44,7 +44,6 @@ const TechStackSelect = ({ value, onChange, isView }) => {
 
   return (
     <div>
-      <label className="block text-base text-[#F8F6FE] mb-2">Technologies utilisées :</label>
       {isView ? (
         <div className="flex flex-wrap gap-2">
           {selectedTechs.length > 0 ? (

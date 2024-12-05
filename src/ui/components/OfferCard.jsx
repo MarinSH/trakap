@@ -17,6 +17,13 @@ export default function OfferCard({ offer, onView, onEdit }) {
     </div>
   ));
 
+  const currentDate = new Date();
+  const sendDate = new Date(offer.sendAt);
+  const diffInDays = Math.floor((currentDate - sendDate) / (1000 * 60 * 60 * 24)); 
+
+  const isWarning = diffInDays > 10;
+  
+
   return (
     <div
       className="shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 mb-4 bg-gray-700 border border-gray-600 cursor-pointer hover:bg-gray-750"
@@ -30,16 +37,6 @@ export default function OfferCard({ offer, onView, onEdit }) {
           <h3 className="text-lg font-semibold text-gray-100">
             <i className="fa-solid fa-bullhorn mr-2"></i>{offer.offerName}
           </h3>
-          {/* <button
-            className="btn bg-gray-600 w-12 h-12 flex justify-center items-center rounded-full p-0 m-0"
-            style={{ fontSize: '16px' }}
-            onClick={(event) => {
-              event.stopPropagation();
-              onEdit(offer.id);
-            }}
-          >
-            <i className="fa-solid fa-pen text-base "></i>
-          </button> */}
         </div>
       </div>
 
@@ -50,10 +47,13 @@ export default function OfferCard({ offer, onView, onEdit }) {
         <p className="text-sm">
           <i className="fa fa-location-arrow mr-2"></i>{offer.location}
         </p>
-        <RemoteWorkIcons remoteWork={offer.remoteWork} />
+        <p className={`text-sm ${isWarning ? 'text-warning-500' : ''}`}>
+          <i className="fa-solid fa-calendar mr-2"></i>{offer.sendAt}
+        </p>
         <p className="text-sm">
           <i className="fa-solid fa-sack-dollar mr-2"></i>{offer.salary}
         </p>
+        <RemoteWorkIcons remoteWork={offer.remoteWork} />
         <div className="flex flex-wrap mt-2">
           {techChips}
         </div>

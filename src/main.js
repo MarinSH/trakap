@@ -8,11 +8,12 @@ if (require('electron-squirrel-startup')) {
 }
 
 const createWindow = () => {
+  const iconPath = path.join(__dirname, 'src', 'trakap.ico');
   const mainWindow = new BrowserWindow({
     width: 1920,
     height: 1080,
     autoHideMenuBar: true,
-    icon: path.join(__dirname, 'src', 'trakap.png'),
+    icon: iconPath,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
@@ -20,7 +21,6 @@ const createWindow = () => {
 
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   mainWindow.webContents.openDevTools();
-  mainWindow.setIcon(iconPath)
 };
 
 app.whenReady().then(async () => {

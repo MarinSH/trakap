@@ -22,7 +22,7 @@ export default function AppNavbar() {
                         </Link>
                     )}
                     {location.pathname !== '/offer/new' && (
-                        <Link to="/offer/new" className="btn btn-secondary">
+                        <Link to="/offer/new" className="btn bg-gradient-to-r from-primary-500 to-secondary-500">
                             Ajouter une offre
                         </Link>
                     )}
