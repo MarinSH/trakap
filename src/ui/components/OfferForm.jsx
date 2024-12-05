@@ -20,8 +20,9 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
     notes: '',
     sendAt: today,
     techStack: [], 
-    remoteWork: CONFIG_REMOTE_WORK[0].value,
+    remoteWork: 'ONSITE',
     imageData: '',
+    showInterviewDate: false,
     ...offerData
   });
 
@@ -49,13 +50,7 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
     }));
   };
 
-  const handleCheckboxChange = (event) => {
-    const { name, value, checked } = event.target;
-    setOffer(prevState => ({
-      ...prevState,
-      [name]: checked ? [...prevState[name], value] : prevState[name].filter(item => item !== value),
-    }));
-  };
+
 
   const handleRemoteWorkChange = (value) => {
     setRemoteWork(value);
@@ -102,9 +97,12 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
     navigate('/offer');
   };
 
-
-
-
+  const handleCheckboxChange = () => {
+    setOffer(prevState => ({
+      ...prevState,
+      showInterviewDate: !prevState.showInterviewDate
+    }));
+  };
   return (
     <form onSubmit={handleSubmit} className="space-y-6 mt-6">
   <div className="flex justify-end space-x-4 mt-4">
@@ -118,7 +116,7 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
     </button>
   </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="space-y-2">
+        <div className="space-y-2">
           <label>Date d'envoi :</label>
           <input
             type="date"
@@ -216,17 +214,29 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
         </div>
         
         <div className="space-y-2">
-          <label>Date de l'entretien :</label>
+        <label>
+          <input 
+            type="checkbox" 
+            onChange={handleCheckboxChange}
+            checked={offer.showInterviewDate}
+            disabled={isView}
+            className="checkbox checkbox-primary mr-1 checkbox-sm"
+          /> 
+          Entretien prévu
+        </label>
+
+        {offer.showInterviewDate && !isView && (
           <input
             type="date"
             name="interviewDate"
-            value={offer.interviewDate}
+            value={offer.interviewDate || ''} 
             onChange={handleInputChange}
             className="input input-bordered w-full"
             disabled={isView}
           />
-        </div>
-
+        )}
+      </div>
+      
         <RemoteWorkSelect 
           value={remoteWork} 
           onChange={handleRemoteWorkChange} 

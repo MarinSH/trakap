@@ -101,5 +101,6 @@ module.exports = {
       },
       "mytheme",
     ],
+    darkMode: ['selector', '[data-theme="mytheme"]']
   },
 }
