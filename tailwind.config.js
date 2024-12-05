@@ -80,4 +80,27 @@ module.exports = {
     require('@tailwindcss/typography'),
     require('daisyui'),
   ],
+  daisyui: {
+    themes: [
+      {
+        mytheme: {
+          "primary": "#4E19E0",
+          "secondary": "#00A8E8",
+          "accent": "#37cdbe",
+          "neutral": "#1c1825",
+          "base-100": "#1c1825",
+          "base-200": "#272334",
+          "base-300": "#403956",
+          "base-400": "#7b6f9f",
+          "base-content": "#F8F6FE",
+          "success": "#93CB00",
+          "warning": "#E88700",
+          "error": "#e83058",
+          "info":"#3449E2"
+        },
+      },
+      "mytheme",
+    ],
+    darkMode: ['selector', '[data-theme="mytheme"]']
+  },
 }

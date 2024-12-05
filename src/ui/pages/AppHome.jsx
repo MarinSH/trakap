@@ -72,7 +72,7 @@ export default function AppHome() {
                                 <button className="btn btn-primary" onClick={goToOffers}>
                                     Voir mes offres
                                 </button>
-                                <button className="btn btn-secondary" onClick={resetDirectory}>
+                                <button className="btn bg-gradient-to-r from-primary-500 to-secondary-500" onClick={resetDirectory}>
                                     Réinitialiser le répertoire
                                 </button>
                             </div>

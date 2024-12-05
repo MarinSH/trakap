@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  button, a{
+    @apply font-bold;
+  }
+}
+
 :root {
     --color-white: #F8F6FE;
     --color-dark: #131014;
