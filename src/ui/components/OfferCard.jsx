@@ -1,4 +1,5 @@
 import React from 'react';
+import RemoteWorkIcons from './RemoteWorkIcons.jsx';
 
 export default function OfferCard({ offer, onView, onEdit }) {
   const handleDragStart = (event) => {
@@ -10,9 +11,15 @@ export default function OfferCard({ offer, onView, onEdit }) {
     event.target.style.opacity = 1;
   };
 
+  const techChips = offer.techStack.map((tech) => (
+    <div key={tech} className="flex items-center px-3 py-1 bg-gray-500 rounded-full text-xs text-gray-200 m-1">
+      <i className={`fab fa-${tech.toLowerCase()} text-sm mr-1`} /> {tech}
+    </div>
+  ));
+
   return (
     <div
-      className="shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 mb-4 bg-gray-700 border border-gray-600"
+      className="shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 mb-4 bg-gray-700 border border-gray-600 cursor-pointer hover:bg-gray-750"
       draggable
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
@@ -23,13 +30,16 @@ export default function OfferCard({ offer, onView, onEdit }) {
           <h3 className="text-lg font-semibold text-gray-100">
             <i className="fa-solid fa-bullhorn mr-2"></i>{offer.offerName}
           </h3>
-          <button
+          {/* <button
             className="btn bg-gray-600 w-12 h-12 flex justify-center items-center rounded-full p-0 m-0"
             style={{ fontSize: '16px' }}
-            onClick={() => onEdit(offer.id)}
+            onClick={(event) => {
+              event.stopPropagation();
+              onEdit(offer.id);
+            }}
           >
             <i className="fa-solid fa-pen text-base "></i>
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -38,14 +48,16 @@ export default function OfferCard({ offer, onView, onEdit }) {
           <i className="fa fa-building mr-2"></i>{offer.companyName}
         </p>
         <p className="text-sm">
-        <i className="fa fa-location-arrow mr-2"></i>{offer.location}
+          <i className="fa fa-location-arrow mr-2"></i>{offer.location}
         </p>
-        <p className="text-sm"> 
+        <RemoteWorkIcons remoteWork={offer.remoteWork} />
+        <p className="text-sm">
           <i className="fa-solid fa-sack-dollar mr-2"></i>{offer.salary}
         </p>
-        <p className="text-sm"> 
-          <i className="fa-solid fa-address-card mr-2"></i>{offer.contactName}
-        </p>
+        <div className="flex flex-wrap mt-2">
+          {techChips}
+        </div>
+              
       </div>
     </div>
   );

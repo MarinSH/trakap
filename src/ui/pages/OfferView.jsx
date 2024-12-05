@@ -42,25 +42,27 @@ export default function OfferView() {
 
   return (
     <section className="py-8">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Détails de l'offre</h1>
-          <button
-          className="btn btn-secondary w-1/3 text-sm"
+  <div className="container mx-auto px-4">
+    <div className="flex justify-between items-center mb-6">
+      <h1 className="text-3xl font-bold">Détails de l'offre</h1>
+      <div className="ml-auto flex space-x-2">
+        <button
+          className="btn btn-secondary text-sm"
           onClick={() => handleEditOffer(offer.id)}
         >
-          Modifier
+          <i className="fa-solid fa-pen"></i>
         </button>
         <button
-          className="btn btn-error w-1/3 text-sm"
+          className="btn btn-error text-sm"
           onClick={() => deleteOffer(offer.id)}
         >
-          Supprimer
+          <i className="fa-solid fa-trash"></i>
         </button>
-        </div>
-
-        <OfferForm offerData={offer} isEdit={false} isView={true} />
       </div>
-    </section>
+    </div>
+
+    <OfferForm offerData={offer} isEdit={false} isView={true} />
+  </div>
+</section>
   );
 }

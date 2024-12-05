@@ -15,6 +15,15 @@ export default function OfferList() {
   async function fetchOffers() {
     const fetchedOffers = await window.api.getOffers();
     setOffers(fetchedOffers);
+
+    // Initialisation de l'état collapsedColumns en fonction des colonnes vides
+    const initialCollapsedState = Object.keys(STATUS_LABELS).reduce((acc, status) => {
+      // Si la colonne est vide, elle sera minimisée par défaut
+      acc[status] = fetchedOffers.filter(offer => offer.status === status).length === 0;
+      return acc;
+    }, {});
+
+    setCollapsedColumns(initialCollapsedState);
   }
 
   const handleViewOffer = (id) => {

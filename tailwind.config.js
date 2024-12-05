@@ -92,7 +92,7 @@ module.exports = {
           "base-200": "#272334",
           "base-300": "#403956",
           "base-400": "#7b6f9f",
-          "base-content": "#ffffff",
+          "base-content": "#F8F6FE",
           "success": "#93CB00",
           "warning": "#E88700",
           "error": "#e83058",

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CONFIG_TECH_STACK, CONFIG_REMOTE_WORK } from '../../utils/config';
+import { CONFIG_TECH_STACK, CONFIG_REMOTE_WORK } from '../../utils/config.js';
+import RemoteWorkSelect from './RemoteWorkSelect.jsx';
+import TechStackSelect from './TechStackSelect.jsx';
 
 export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = false }) => {
   const today = new Date().toISOString().split('T')[0];
@@ -14,7 +16,7 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
     contactPhone: '',
     interviewDate: '',
     salary: '',
-    status: 'PENDING',
+    status: 'SENDING',
     notes: '',
     sendAt: today,
     techStack: [], 
@@ -23,6 +25,9 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
     ...offerData
   });
 
+  const [remoteWork, setRemoteWork] = useState(offer.remoteWork);  
+  const [techStack, setTechStack] = useState(offer.techStack); 
+  const [selectedFile, setSelectedFile] = useState(null); 
   const navigate = useNavigate();
   const previousOfferDataRef = useRef(offerData);
 
@@ -52,6 +57,20 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
     }));
   };
 
+  const handleRemoteWorkChange = (value) => {
+    setRemoteWork(value);
+    handleInputChange({ target: { name: 'remoteWork', value } });  
+  };
+
+  const handleTechStackChange = (newValues) => {
+    console.log("Tech stack selected:", newValues);
+    setTechStack(newValues);
+    setOffer(prevState => ({
+      ...prevState,
+      techStack: newValues,
+    }));
+  };
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -61,6 +80,7 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
           ...prevState,
           imageData: reader.result
         }));
+        setSelectedFile(file);
       };
       reader.readAsDataURL(file);
     }
@@ -73,7 +93,7 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
       if (offer.imageData) {
         formData.imageData = offer.imageData;
       }
-      onSubmit(formData);
+      onSubmit(formData);  
       navigate('/offer');
     }
   };
@@ -82,18 +102,34 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
     navigate('/offer');
   };
 
+
+
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+  <div className="flex justify-end space-x-4 mt-4">
     {!isView && (
-        <button type="submit" className="btn btn-success w-full sm:w-auto">
-          {isEdit ? 'Modifier l\'offre' : 'Ajouter l\'offre'}
-        </button>
-      )}
-
-      <button type="button" onClick={handleCancel} className="btn btn-secondary w-full sm:w-auto mt-4">
-        {isView ? 'Retour' : 'Annuler'}
+      <button type="submit" className="btn btn-success sm:w-auto">
+        {isEdit ? <i className="fa-solid fa-floppy-disk"></i> : <i className="fa-solid fa-floppy-disk"></i>}
       </button>
+    )}
+    <button type="button" onClick={handleCancel} className="btn bg-gray-500 sm:w-auto">
+      {isView ? <i className="fa-solid fa-arrow-left"></i> : <i className="fa-solid fa-xmark"></i>}
+    </button>
+  </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="space-y-2">
+          <label>Date d'envoi :</label>
+          <input
+            type="date"
+            name="sendAt"
+            value={offer.sendAt}
+            onChange={handleInputChange}
+            className="input input-bordered w-full"
+            disabled={isView}
+          />
+        </div>
+
       <div className="space-y-2">
         <label>Nom de l'entreprise :</label>
         <input
@@ -178,34 +214,6 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
             disabled={isView}
           />
         </div>
-
-        <div className="space-y-2">
-          <label>Notes :</label>
-          <textarea
-            name="notes"
-            value={offer.notes}
-            onChange={handleInputChange}
-            className="textarea textarea-bordered w-full"
-            disabled={isView}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label>Travail à distance :</label>
-          <select
-            name="remoteWork"
-            value={offer.remoteWork}
-            onChange={handleInputChange}
-            className="input input-bordered w-full"
-            disabled={isView}
-          >
-            {CONFIG_REMOTE_WORK.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
         
         <div className="space-y-2">
           <label>Date de l'entretien :</label>
@@ -219,59 +227,58 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
           />
         </div>
 
-        <div className="space-y-2">
-          <label>Technologies utilisées :</label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {CONFIG_TECH_STACK.map((tech) => (
-              <label key={tech} className="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  name="techStack"
-                  value={tech}
-                  onChange={handleCheckboxChange}
-                  checked={offer.techStack.includes(tech)}
-                  className="checkbox"
-                  disabled={isView}
-                />
-                {tech}
-              </label>
-            ))}
-          </div>
-        </div>
+        <RemoteWorkSelect 
+          value={remoteWork} 
+          onChange={handleRemoteWorkChange} 
+          isView={isView}
+        />
+
+        <TechStackSelect 
+          value={techStack} 
+          onChange={handleTechStackChange} 
+          options={CONFIG_TECH_STACK} 
+          isView={isView} 
+        />
+
 
         <div className="space-y-2">
-          <label>Date d'envoi :</label>
-          <input
-            type="date"
-            name="sendAt"
-            value={offer.sendAt}
+          <label>Notes :</label>
+          <textarea
+            name="notes"
+            value={offer.notes}
             onChange={handleInputChange}
-            className="input input-bordered w-full"
+            className="textarea textarea-bordered w-full"
             disabled={isView}
           />
         </div>
 
-        {offer.imageData && isView ? (
-          <div className="space-y-2">
-            <label>Image de l'offre :</label>
-            <img src={offer.imageData} alt="Offer" className="w-full" />
-          </div>
-        ) : (
-          !isView && (
-            <div className="space-y-2">
-              <label>Image de l'offre :</label>
-              <input
-                type="file"
-                name="image"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="input input-bordered w-full"
-              />
-            </div>
-          )
-        )}
-      </div>
+  </div>
 
+        {offer.imageData && isView ? (
+            <img src={offer.imageData} alt="Offer" className="w-full rounded-lg shadow-lg" />
+          ) : (
+            !isView && (
+              <div className="flex items-center space-x-4">
+                <label
+                  htmlFor="file-upload"
+                  className="cursor-pointer inline-flex items-center justify-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all"
+                >
+                  <i className="fas fa-upload mr-2"></i> Choisir une image
+                </label>
+                <input
+                  id="file-upload"
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+                <span className="text-gray-500">
+                  {selectedFile ? selectedFile.name : 'Aucun fichier choisi'}
+                </span>
+              </div>
+            )
+          )}
       
     </form>
   );
