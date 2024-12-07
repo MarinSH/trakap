@@ -2,13 +2,8 @@ import React, { useState } from 'react';
 import RemoteWorkIcons from './RemoteWorkIcons.jsx';
 import { FEELING_TYPES } from '../../utils/config.js';
 
-export default function OfferCard({ offer, onView, onEdit }) {
-  const [isLiked, setIsLiked] = useState(false);
-
-  const toggleLike = (event) => {
-    event.stopPropagation(); 
-    setIsLiked(!isLiked);
-  };
+export default function OfferCard({ offer, onView, onLikeToggle }) {
+  const [isLiked, setIsLiked] = useState(offer.isLiked || false);
 
   const handleDragStart = (event) => {
     event.dataTransfer.setData('offerId', offer.id);
@@ -32,9 +27,13 @@ export default function OfferCard({ offer, onView, onEdit }) {
   const isWarning = diffInDays > 10;
   const feeling = FEELING_TYPES.find((type) => type.value === offer.feelingType);
 
-  const handleLikeToggle = (event) => {
-    event.stopPropagation(); // Empêche la propagation du clic vers le parent
-    onLikeToggle(offer.id);  // Notifie le parent du changement de like
+  
+  const toggleLike = (event) => {
+    event.stopPropagation(); 
+    setIsLiked(!isLiked);
+    if (onLikeToggle) { 
+      onLikeToggle(offer.id);
+    }
   };
 
   return (
@@ -51,10 +50,12 @@ export default function OfferCard({ offer, onView, onEdit }) {
             <span>{feeling ? feeling.label : 'Aucun ressenti'}</span> {offer.offerName}
           </h3>
           <button
-            onClick={handleLikeToggle}
-            className={`ml-4 p-2 rounded-full ${offer.isLiked ? 'bg-warning-500 text-white' : 'bg-gray-500 text-gray-200'}`}
+            onClick={toggleLike}
+            className={`ml-4 p-2 rounded-full ${
+              isLiked ? 'bg-warning-500 text-white' : 'bg-gray-500 text-gray-200'
+            }`}
           >
-            <i className={`fa${offer.isLiked ? 's' : 'r'} fa-heart`}></i>
+            <i className={`fa${isLiked ? 's' : 'r'} fa-heart`}></i>
           </button>
         </div>
       </div>

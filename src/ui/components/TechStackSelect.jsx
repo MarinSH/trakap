@@ -2,7 +2,6 @@ import React from 'react';
 import Select from 'react-select';
 import { CONFIG_TECH_STACK } from '../../utils/config.js';
 
-
 const CustomSingleValue = ({ data }) => (
   <div className="flex items-center space-x-2 text-base-content">
     <i className={`${data.icon} text-xl`} />
@@ -10,10 +9,17 @@ const CustomSingleValue = ({ data }) => (
   </div>
 );
 
-const CustomMultiValue = ({ data }) => (
+const CustomMultiValue = ({ data, removeProps }) => (
   <div className="flex items-center px-2 py-1 bg-[#4E19E0] text-xs text-[#F8F6FE] rounded-full space-x-1 mr-2 mb-2">
     <i className={`${data.icon} text-sm`} />
     <span className="text-xs">{data.label}</span>
+    <button 
+      {...removeProps} 
+      className="ml-1 text-xs text-[#F8F6FE] hover:text-warning-500"
+      title="Supprimer"
+    >
+      ×
+    </button>
   </div>
 );
 

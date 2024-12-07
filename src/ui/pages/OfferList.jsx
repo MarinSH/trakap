@@ -16,28 +16,62 @@ export default function OfferList() {
 
   useEffect(() => {
     fetchOffers();
+    // Récupérer l'état des colonnes et des filtres depuis localStorage au démarrage de l'application
+    const savedColumns = JSON.parse(localStorage.getItem('collapsedColumns'));
+    const savedFilters = JSON.parse(localStorage.getItem('filters'));
+    
+    if (savedColumns) {
+      setCollapsedColumns(savedColumns);  // Restaurer l'état des colonnes (ouvert/fermé)
+    } else {
+      // Si aucune sauvegarde, on définit l'état initial des colonnes à toutes ouvertes
+      const initialCollapsedState = Object.keys(STATUS_LABELS).reduce((acc, status) => {
+        acc[status] = false;  // Par défaut, toutes les colonnes sont ouvertes
+        return acc;
+      }, {});
+      setCollapsedColumns(initialCollapsedState);
+    }
+
+    if (savedFilters) {
+      setSearchQuery(savedFilters.searchQuery || '');
+      setSelectedRemoteWork(savedFilters.selectedRemoteWork || '');
+      setSelectedContractType(savedFilters.selectedContractType || '');
+      setSelectedTechStack(savedFilters.selectedTechStack || '');
+    }
   }, []);
 
+  useEffect(() => {
+    // Sauvegarder l'état des colonnes dans localStorage après chaque modification
+    localStorage.setItem('collapsedColumns', JSON.stringify(collapsedColumns));
+  }, [collapsedColumns]);
+
+  useEffect(() => {
+    // Sauvegarder les filtres de recherche dans localStorage
+    const filters = {
+      searchQuery,
+      selectedRemoteWork,
+      selectedContractType,
+      selectedTechStack,
+    };
+    localStorage.setItem('filters', JSON.stringify(filters));
+  }, [searchQuery, selectedRemoteWork, selectedContractType, selectedTechStack]);
+
+  // Fonction pour récupérer les offres
   async function fetchOffers() {
     const fetchedOffers = await window.api.getOffers();
     setOffers(fetchedOffers);
-    
-    const initialCollapsedState = Object.keys(STATUS_LABELS).reduce((acc, status) => {
-      acc[status] = fetchedOffers.filter(offer => offer.status === status).length === 0;
-      return acc;
-    }, {});
-
-    setCollapsedColumns(initialCollapsedState);
   }
 
+  // Fonction pour gérer l'affichage d'une offre
   const handleViewOffer = (id) => {
     navigate(`/offer/view/${id}`);
   };
 
+  // Fonction pour gérer la modification d'une offre
   const handleEditOffer = (id) => {
     navigate(`/offer/edit/${id}`);
   };
 
+  // Fonction pour changer le statut d'une offre
   const handleStatusChange = async (id, newStatus) => {
     const updatedOffer = offers.find(offer => offer.id === id);
     if (updatedOffer) {
@@ -56,13 +90,15 @@ export default function OfferList() {
     event.preventDefault();
   };
 
+  // Fonction pour gérer l'affichage/masquage des colonnes
   const toggleCollapse = (status) => {
     setCollapsedColumns(prevState => ({
       ...prevState,
-      [status]: !prevState[status],
+      [status]: !prevState[status],  // Basculer l'état (ouvert/fermé)
     }));
   };
 
+  // Fonction pour réinitialiser les filtres
   const resetFilters = () => {
     setSearchQuery('');
     setSelectedRemoteWork('');
@@ -78,6 +114,7 @@ export default function OfferList() {
     REJECTED: 'bg-gradient-to-r from-warning-500 to-warning-700',
   };
 
+  // Filtrer les offres selon les critères de recherche et les filtres
   const filteredOffers = offers.filter(offer => {
     return (
       (searchQuery === '' || 
@@ -89,6 +126,7 @@ export default function OfferList() {
     );
   });
 
+  // Regrouper les offres par statut
   const groupedOffers = filteredOffers.reduce((acc, offer) => {
     if (!acc[offer.status]) {
       acc[offer.status] = [];
@@ -96,13 +134,23 @@ export default function OfferList() {
     acc[offer.status].push(offer);
     return acc;
   }, {});
+
+  // Fonction pour basculer l'état "like" d'une offre
+  const handleToggleLike = (offerId) => {
+    setOffers((prevOffers) =>
+      prevOffers.map((offer) =>
+        offer.id === offerId ? { ...offer, isLiked: !offer.isLiked } : offer
+      )
+    );
+  };
+
   return (
     <section className="py-8">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-bold mb-6">Kanban des offres</h1>
 
         <div className="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div>
+          <div>
             <button
               onClick={resetFilters}
               className="btn bg-gradient-to-r from-primary-500 to-secondary-500"
@@ -120,10 +168,10 @@ export default function OfferList() {
             />
           </div>
           <div>
-          <RemoteWorkSelect 
-            value={selectedRemoteWork}
-            onChange={(value) => setSelectedRemoteWork(value)}
-          />
+            <RemoteWorkSelect 
+              value={selectedRemoteWork}
+              onChange={(value) => setSelectedRemoteWork(value)}
+            />
           </div>
           <div>
             <select
@@ -153,10 +201,9 @@ export default function OfferList() {
               ))}
             </select>
           </div>
-          
         </div>
 
-        <div className="flex justify-between space-x-4">
+        <div className="flex justify-between space-x-2">
           {Object.keys(STATUS_LABELS).map(status => (
             <div
               key={status}
@@ -191,6 +238,7 @@ export default function OfferList() {
                     onView={handleViewOffer}
                     onEdit={handleEditOffer}
                     onStatusChange={handleStatusChange}
+                    onLikeToggle={handleToggleLike} 
                     status={status}
                   />
                 ))}
