@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import RemoteWorkIcons from './RemoteWorkIcons.jsx';
+import { FEELING_TYPES } from '../../utils/config.js';
 
 export default function OfferCard({ offer, onView, onEdit }) {
+  const [isLiked, setIsLiked] = useState(false);
+
+  const toggleLike = (event) => {
+    event.stopPropagation(); 
+    setIsLiked(!isLiked);
+  };
+
   const handleDragStart = (event) => {
     event.dataTransfer.setData('offerId', offer.id);
     event.target.style.opacity = 0.5;
@@ -22,7 +30,12 @@ export default function OfferCard({ offer, onView, onEdit }) {
   const diffInDays = Math.floor((currentDate - sendDate) / (1000 * 60 * 60 * 24)); 
 
   const isWarning = diffInDays > 10;
-  
+  const feeling = FEELING_TYPES.find((type) => type.value === offer.feelingType);
+
+  const handleLikeToggle = (event) => {
+    event.stopPropagation(); // Empêche la propagation du clic vers le parent
+    onLikeToggle(offer.id);  // Notifie le parent du changement de like
+  };
 
   return (
     <div
@@ -35,8 +48,14 @@ export default function OfferCard({ offer, onView, onEdit }) {
       <div className="p-4">
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold text-gray-100">
-            <i className="fa-solid fa-bullhorn mr-2"></i>{offer.offerName}
+            <span>{feeling ? feeling.label : 'Aucun ressenti'}</span> {offer.offerName}
           </h3>
+          <button
+            onClick={handleLikeToggle}
+            className={`ml-4 p-2 rounded-full ${offer.isLiked ? 'bg-warning-500 text-white' : 'bg-gray-500 text-gray-200'}`}
+          >
+            <i className={`fa${offer.isLiked ? 's' : 'r'} fa-heart`}></i>
+          </button>
         </div>
       </div>
 
@@ -57,7 +76,6 @@ export default function OfferCard({ offer, onView, onEdit }) {
         <div className="flex flex-wrap mt-2">
           {techChips}
         </div>
-              
       </div>
     </div>
   );

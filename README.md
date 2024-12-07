@@ -18,4 +18,5 @@ git clone https://github.com/MarinSH/app-trakap
 cd template-electron-react
 npm install
 npm start
+npm run package
 ```

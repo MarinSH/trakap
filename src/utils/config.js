@@ -120,7 +120,11 @@ export const CONFIG_REMOTE_WORK = [
     { 
       value: 'ALLDAY', 
       label: 'Télétravail complet', 
-    }
+    },
+    { 
+      value: 'NONE', 
+      label: 'Sans information' 
+    },
   ];
 
 export const STATUS_LABELS = {
@@ -135,4 +139,17 @@ export const CONTRACT_TYPES = [
   { value: 'CDI', label: 'CDI' },
   { value: 'CDD', label: 'CDD' },
   { value: 'Alternance', label: 'Alternance' },
+];
+
+export const SCHEDULE_TYPES = [
+  { value: 'FLEXIBLE', label: 'Flexible' },
+  { value: 'FIXED', label: 'Fixe' },
+  { value: 'NONE', label: 'Sans information' },
+];
+
+export const FEELING_TYPES = [
+  { value: 'BAD', label: '🔴' },
+  { value: 'MIDDLE', label: '🟠' },
+  { value: 'GOOD', label: '🟢' },
+  { value: 'NEUTRAL', label: '⚪' },
 ];

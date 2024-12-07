@@ -131,8 +131,8 @@ const TechStackSelect = ({ value, onChange, isView }) => {
             }),
             menuList: (provided) => ({
               ...provided,
-              maxHeight: '300px',  // Limite de la hauteur du menu
-              overflowY: 'auto',    // Permet de défiler si trop de choix
+              maxHeight: '300px',
+              overflowY: 'auto', 
             }),
           }}
         />

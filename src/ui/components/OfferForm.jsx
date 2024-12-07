@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CONFIG_TECH_STACK, CONFIG_REMOTE_WORK, CONTRACT_TYPES } from '../../utils/config.js';
+import { CONFIG_TECH_STACK, CONFIG_REMOTE_WORK, CONTRACT_TYPES, SCHEDULE_TYPES, FEELING_TYPES } from '../../utils/config.js';
 import RemoteWorkSelect from './RemoteWorkSelect.jsx';
 import TechStackSelect from './TechStackSelect.jsx';
 
@@ -14,25 +14,31 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
     contactName: '',
     contactEmail: '',
     contactPhone: '',
-    interviewDate: '',
     salary: '',
     status: 'SENDING',
+    isLiked: false,
     notes: '',
     sendAt: today,
     techStack: [], 
     remoteWork: 'ONSITE',
     imageData: '',
+    interviewDate: '',
     showInterviewDate: false,
     relaunchDate: '',
     showRelaunchDate: false,
     offerLink: '',
     offerSource: '',
     experienceRequired: '',
-    contractType: '',
+    contractType: 'CDI',
     domain: '',
+    startDate: '',
+    commuteTime: '',
+    benefits: '',
+    applicationInfo: '',
+    feelingType: 'NEUTRAL',
+    scheduleType: 'FLEXIBLE',
     ...offerData
   });
-
   const [remoteWork, setRemoteWork] = useState(offer.remoteWork);  
   const [techStack, setTechStack] = useState(offer.techStack); 
   const [selectedFile, setSelectedFile] = useState(null); 
@@ -48,14 +54,6 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
       previousOfferDataRef.current = offerData;
     }
   }, [offerData]);
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setOffer(prevState => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
 
   const handleRemoteWorkChange = (value) => {
     setRemoteWork(value);
@@ -103,23 +101,41 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
   };
 
   const handleCheckboxChange = (fieldName) => {
-    setOffer(prevState => ({
+    setOffer((prevState) => {
+      const newState = { ...prevState, [fieldName]: !prevState[fieldName] };
+
+      if (fieldName === 'showRelaunchDate' && !newState[fieldName]) {
+        newState.relaunchDate = '';
+      }
+      if (fieldName === 'showInterviewDate' && !newState[fieldName]) {
+        newState.interviewDate = '';
+      }
+  
+      return newState;
+    });
+  };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setOffer((prevState) => ({
       ...prevState,
-      [fieldName]: !prevState[fieldName], 
+      [name]: value,
     }));
   };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6 mt-6">
-  <div className="flex justify-end space-x-4 mt-4">
-    {!isView && (
-      <button type="submit" className="btn bg-gradient-to-r from-success-500 to-success-700 sm:w-auto">
-        {isEdit ? <i className="fa-solid fa-floppy-disk"></i> : <i className="fa-solid fa-floppy-disk"></i>}
+    <div className="flex justify-end space-x-4 mt-4">
+      {!isView && (
+        <button type="submit" className="btn bg-gradient-to-r from-success-500 to-success-700 sm:w-auto">
+          {isEdit ? <i className="fa-solid fa-floppy-disk"></i> : <i className="fa-solid fa-floppy-disk"></i>}
+        </button>
+      )}
+      <button type="button" onClick={handleCancel} className="btn bg-gray-500 sm:w-auto">
+        {isView ? <i className="fa-solid fa-arrow-left"></i> : <i className="fa-solid fa-xmark"></i>}
       </button>
-    )}
-    <button type="button" onClick={handleCancel} className="btn bg-gray-500 sm:w-auto">
-      {isView ? <i className="fa-solid fa-arrow-left"></i> : <i className="fa-solid fa-xmark"></i>}
-    </button>
-  </div>
+    </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div className="space-y-2">
           <label>Date d'envoi :</label>
@@ -218,7 +234,9 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
           />
         </div>
         
-        <div className="space-y-2">
+
+
+      <div className="space-y-2">
         <label>
           <input 
             type="checkbox" 
@@ -227,15 +245,15 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
             disabled={isView}
             className="checkbox checkbox-primary mr-1 checkbox-sm"
           /> 
-          Entretien prévu
+          Entretien
         </label>
 
-        {offer.showInterviewDate && !isView && (
+        {offer.showInterviewDate && (
           <input
             type="date"
             name="interviewDate"
             value={offer.interviewDate || ''} 
-            onChange={() => handleCheckboxChange('showInterviewDate')}
+            onChange={handleInputChange}
             className="input input-bordered w-full"
             disabled={isView}
           />
@@ -260,98 +278,189 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
         isView={isView} 
         />
       </div>
-        
 
+      <div className="space-y-2">
+        <label>
+          <input 
+            type="checkbox" 
+            onChange={() => handleCheckboxChange('showRelaunchDate')}
+            checked={offer.showRelaunchDate}
+            disabled={isView}
+            className="checkbox checkbox-primary mr-1 checkbox-sm"
+          /> 
+          Relance
+        </label>
 
-        <div className="space-y-2">
-          <label>
-            <input 
-              type="checkbox" 
-              onChange={() => handleCheckboxChange('showRelaunchDate')}
-              checked={offer.showRelaunchDate}
-              disabled={isView}
-              className="checkbox checkbox-primary mr-1 checkbox-sm"
-            /> 
-            Relance
-          </label>
+        {offer.showRelaunchDate && (
+          <input
+            type="date"
+            name="relaunchDate"
+            value={offer.relaunchDate || ''} 
+            onChange={handleInputChange}
+            className="input input-bordered w-full"
+            disabled={isView}
+          />
+        )}
+      </div>
 
-          {offer.showRelaunchDate && !isView && (
-            <input
-              type="date"
-              name="interviewDate"
-              value={offer.relaunchDate || ''} 
-              onChange={() => handleCheckboxChange('showRelaunchDate')}
-              className="input input-bordered w-full"
-              disabled={isView}
-            />
-          )}
-        </div>
+      <div className="space-y-2">
+        <label>Lien de l'offre :</label>
+        {!isView ? (
+          <input
+            type="url"
+            name="offerLink"
+            value={offer.offerLink}
+            onChange={handleInputChange}
+            className="input input-bordered w-full"
+          />
+        ) : (
+          offer.offerLink && (
+            <div className="space-y-2 mt-2">
+              <button
+                type="button"
+                onClick={() => window.open(offer.offerLink, "_blank")}
+                className="btn bg-gradient-to-r from-gray-500 to-gray-700 sm:w-auto"
+              >
+                Voir l'offre
+              </button>
+            </div>
+          )
+        )}
+      </div>
 
-          <div className="space-y-2">
-            <label>Lien de l'offre :</label>
-            <input
-              type="url"
-              name="offerLink"
-              value={offer.offerLink}
-              onChange={handleInputChange}
-              className="input input-bordered w-full"
-              disabled={isView}
-            />
-          </div>
+      <div className="space-y-2">
+        <label>Endroit où vous avez trouvé l'offre :</label>
+        <input
+          type="text"
+          name="offerSource"
+          value={offer.offerSource}
+          onChange={handleInputChange}
+          className="input input-bordered w-full"
+          disabled={isView}
+        />
+      </div>
 
-          <div className="space-y-2">
-            <label>Endroit où vous avez trouvé l'offre :</label>
-            <input
-              type="text"
-              name="offerSource"
-              value={offer.offerSource}
-              onChange={handleInputChange}
-              className="input input-bordered w-full"
-              disabled={isView}
-            />
-          </div>
+      <div className="space-y-2">
+        <label>Expérience demandée :</label>
+        <input
+          type="text"
+          name="experienceRequired"
+          value={offer.experienceRequired}
+          onChange={handleInputChange}
+          className="input input-bordered w-full"
+          disabled={isView}
+        />
+      </div>
 
-          <div className="space-y-2">
-            <label>Expérience demandée :</label>
-            <input
-              type="text"
-              name="experienceRequired"
-              value={offer.experienceRequired}
-              onChange={handleInputChange}
-              className="input input-bordered w-full"
-              disabled={isView}
-            />
-          </div>
+      <div className="space-y-2">
+        <label>Type de contrat :</label>
+        <select
+          name="contractType"
+          value={offer.contractType}
+          onChange={handleInputChange}
+          className="select select-bordered w-full"
+          disabled={isView}
+        >
+          {CONTRACT_TYPES.map((contract) => (
+            <option key={contract.value} value={contract.value}>
+              {contract.label}
+            </option>
+          ))}
+        </select>
+      </div>
 
-          <div className="space-y-2">
-            <label>Type de contrat :</label>
-            <select
-              name="contractType"
-              value={offer.contractType}
-              onChange={handleInputChange}
-              className="select select-bordered w-full"
-              disabled={isView}
-            >
-              {CONTRACT_TYPES.map((contract) => (
-                <option key={contract.value} value={contract.value}>
-                  {contract.label}
-                </option>
-              ))}
-            </select>
-          </div>
+      <div className="space-y-2">
+        <label>Domaine d'activité :</label>
+        <input
+          type="text"
+          name="domain"
+          value={offer.domain}
+          onChange={handleInputChange}
+          className="input input-bordered w-full"
+          disabled={isView}
+        />
+      </div>
 
-          <div className="space-y-2">
-            <label>Domaine d'activité :</label>
-            <input
-              type="text"
-              name="domain"
-              value={offer.domain}
-              onChange={handleInputChange}
-              className="input input-bordered w-full"
-              disabled={isView}
-            />
-          </div>
+      <div className="space-y-2">
+        <label>Horaire :</label>
+        <select
+          name="scheduleType"
+          value={offer.scheduleType}
+          onChange={handleInputChange}
+          className="select select-bordered w-full"
+          disabled={isView}
+        >
+          {SCHEDULE_TYPES.map((schedule) => (
+            <option key={schedule.value} value={schedule.value}>
+              {schedule.label}
+            </option>
+          ))}
+        </select>
+      </div>
 
+      <div className="space-y-2">
+        <label>Date de démarrage souhaitée :</label>
+        <input
+          type="date"
+          name="startDate"
+          value={offer.startDate}
+          onChange={handleInputChange}
+          className="input input-bordered w-full"
+          disabled={isView}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label>Temps du trajet :</label>
+        <input
+          type="text"
+          name="commuteTime"
+          value={offer.commuteTime}
+          onChange={handleInputChange}
+          className="input input-bordered w-full"
+          disabled={isView}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label>Feeling :</label>
+        <select
+          name="feelingType"
+          value={offer.feelingType}
+          onChange={handleInputChange}
+          className="select select-bordered w-full"
+          disabled={isView}
+        >
+          {FEELING_TYPES.map((feeling) => (
+            <option key={feeling.value} value={feeling.value}>
+              {feeling.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="space-y-2">
+        <label>Avantages :</label>
+        <input
+          type="text"
+          name="benefits"
+          value={offer.benefits}
+          onChange={handleInputChange}
+          className="input input-bordered w-full"
+          disabled={isView}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label>Informations fournies lors de la candidature :</label>
+        <textarea
+          name="applicationInfo"
+          value={offer.applicationInfo}
+          onChange={handleInputChange}
+          className="textarea textarea-bordered w-full min-h-64"
+          disabled={isView}
+        />
+      </div>
 
       <div className="space-y-2">
         <label>Notes :</label>
@@ -359,7 +468,7 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
           name="notes"
           value={offer.notes}
           onChange={handleInputChange}
-          className="textarea textarea-bordered w-full"
+          className="textarea textarea-bordered w-full min-h-64"
           disabled={isView}
         />
       </div>

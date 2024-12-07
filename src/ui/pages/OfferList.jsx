@@ -21,7 +21,7 @@ export default function OfferList() {
   async function fetchOffers() {
     const fetchedOffers = await window.api.getOffers();
     setOffers(fetchedOffers);
-
+    
     const initialCollapsedState = Object.keys(STATUS_LABELS).reduce((acc, status) => {
       acc[status] = fetchedOffers.filter(offer => offer.status === status).length === 0;
       return acc;
@@ -164,37 +164,36 @@ export default function OfferList() {
               onDrop={(event) => handleDrop(event, status)}
               onDragOver={handleDragOver}
             >
-              <div className={`p-2 ${statusGradients[status]}  rounded-t-lg flex h-14 items-center justify-between border-b border-gray-600`}>
-                <h2 className="text-xl font-semibold pl-4 text-gray-100">
-                  {collapsedColumns[status] ? '' : STATUS_LABELS[status]}
-                </h2>
-                <button
-                  onClick={() => toggleCollapse(status)}
-                  className="text-gray-100 mr-6"
-                >
-                  <i className={`fa ${collapsedColumns[status] ? 'fa-chevron-right' : 'fa-chevron-left'}`}></i>
-                </button>
+              <div
+                onClick={() => toggleCollapse(status)}
+                className={`p-2 ${statusGradients[status]} rounded-t-lg flex h-14 items-center justify-between border-b border-gray-600 cursor-pointer`}
+              >
+                <div className="flex items-center">
+                  <p className="text-center text-gray-100 flex items-center mr-4">
+                    {groupedOffers[status]?.length || 0} <i className="fa-solid fa-folder-open ml-1"></i>
+                  </p>
+
+                  <h2 className="text-xl font-semibold text-gray-100">
+                    {collapsedColumns[status] ? '' : STATUS_LABELS[status]}
+                  </h2>
+                </div>
+
+                <i
+                  className={`fa ${collapsedColumns[status] ? 'fa-chevron-right' : 'fa-chevron-left'} text-gray-100 mr-6`}
+                ></i>
               </div>
 
               <div className="kanban-cards m-4 space-y-4 flex-1">
-                {collapsedColumns[status] ? (
-                  groupedOffers[status]?.length > 0 && (
-                    <p className="text-center text-gray-300">
-                      {groupedOffers[status]?.length} <i className="fa-solid fa-folder-open"></i>
-                    </p>
-                  )
-                ) : (
-                  groupedOffers[status]?.map(offer => (
-                    <OfferCard
-                      key={offer.id}
-                      offer={offer}
-                      onView={handleViewOffer}
-                      onEdit={handleEditOffer}
-                      onStatusChange={handleStatusChange}
-                      status={status}
-                    />
-                  ))
-                )}
+                {!collapsedColumns[status] && groupedOffers[status]?.map(offer => (
+                  <OfferCard
+                    key={offer.id}
+                    offer={offer}
+                    onView={handleViewOffer}
+                    onEdit={handleEditOffer}
+                    onStatusChange={handleStatusChange}
+                    status={status}
+                  />
+                ))}
               </div>
             </div>
           ))}
