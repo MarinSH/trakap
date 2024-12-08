@@ -51,11 +51,9 @@ export default function OfferCard({ offer, onView, onLikeToggle }) {
           </h3>
           <button
             onClick={toggleLike}
-            className={`ml-4 p-2 rounded-full ${
-              isLiked ? 'bg-warning-500 text-white' : 'bg-gray-500 text-gray-200'
-            }`}
+            className={`btn btn-circle ${isLiked ? 'text-warning-500' : 'text-gray-500'}`}
           >
-            <i className={`fa${isLiked ? 's' : 'r'} fa-heart`}></i>
+            <i className={`text-2xl fa${isLiked ? '-solid' : '-regular'} fa-heart`}></i>
           </button>
         </div>
       </div>

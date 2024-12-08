@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import OfferCard from '../components/OfferCard.jsx';
-import { CONFIG_REMOTE_WORK, STATUS_LABELS, CONTRACT_TYPES, CONFIG_TECH_STACK } from '../../utils/config.js';
+import { STATUS_LABELS, CONTRACT_TYPES, CONFIG_TECH_STACK } from '../../utils/config.js';
 import RemoteWorkSelect from '../components/RemoteWorkSelect.jsx';
-import TechStackSelect from '../components/TechStackSelect.jsx';
 
 export default function OfferList() {
   const [offers, setOffers] = useState([]);
@@ -16,16 +15,14 @@ export default function OfferList() {
 
   useEffect(() => {
     fetchOffers();
-    // Récupérer l'état des colonnes et des filtres depuis localStorage au démarrage de l'application
     const savedColumns = JSON.parse(localStorage.getItem('collapsedColumns'));
     const savedFilters = JSON.parse(localStorage.getItem('filters'));
     
     if (savedColumns) {
-      setCollapsedColumns(savedColumns);  // Restaurer l'état des colonnes (ouvert/fermé)
+      setCollapsedColumns(savedColumns);
     } else {
-      // Si aucune sauvegarde, on définit l'état initial des colonnes à toutes ouvertes
       const initialCollapsedState = Object.keys(STATUS_LABELS).reduce((acc, status) => {
-        acc[status] = false;  // Par défaut, toutes les colonnes sont ouvertes
+        acc[status] = false;
         return acc;
       }, {});
       setCollapsedColumns(initialCollapsedState);
@@ -40,12 +37,10 @@ export default function OfferList() {
   }, []);
 
   useEffect(() => {
-    // Sauvegarder l'état des colonnes dans localStorage après chaque modification
     localStorage.setItem('collapsedColumns', JSON.stringify(collapsedColumns));
   }, [collapsedColumns]);
 
   useEffect(() => {
-    // Sauvegarder les filtres de recherche dans localStorage
     const filters = {
       searchQuery,
       selectedRemoteWork,
@@ -55,23 +50,19 @@ export default function OfferList() {
     localStorage.setItem('filters', JSON.stringify(filters));
   }, [searchQuery, selectedRemoteWork, selectedContractType, selectedTechStack]);
 
-  // Fonction pour récupérer les offres
   async function fetchOffers() {
     const fetchedOffers = await window.api.getOffers();
     setOffers(fetchedOffers);
   }
 
-  // Fonction pour gérer l'affichage d'une offre
   const handleViewOffer = (id) => {
     navigate(`/offer/view/${id}`);
   };
 
-  // Fonction pour gérer la modification d'une offre
   const handleEditOffer = (id) => {
     navigate(`/offer/edit/${id}`);
   };
 
-  // Fonction pour changer le statut d'une offre
   const handleStatusChange = async (id, newStatus) => {
     const updatedOffer = offers.find(offer => offer.id === id);
     if (updatedOffer) {
@@ -90,15 +81,13 @@ export default function OfferList() {
     event.preventDefault();
   };
 
-  // Fonction pour gérer l'affichage/masquage des colonnes
   const toggleCollapse = (status) => {
     setCollapsedColumns(prevState => ({
       ...prevState,
-      [status]: !prevState[status],  // Basculer l'état (ouvert/fermé)
+      [status]: !prevState[status],
     }));
   };
 
-  // Fonction pour réinitialiser les filtres
   const resetFilters = () => {
     setSearchQuery('');
     setSelectedRemoteWork('');
@@ -114,7 +103,6 @@ export default function OfferList() {
     REJECTED: 'bg-gradient-to-r from-warning-500 to-warning-700',
   };
 
-  // Filtrer les offres selon les critères de recherche et les filtres
   const filteredOffers = offers.filter(offer => {
     return (
       (searchQuery === '' || 
@@ -126,7 +114,6 @@ export default function OfferList() {
     );
   });
 
-  // Regrouper les offres par statut
   const groupedOffers = filteredOffers.reduce((acc, offer) => {
     if (!acc[offer.status]) {
       acc[offer.status] = [];
@@ -135,7 +122,6 @@ export default function OfferList() {
     return acc;
   }, {});
 
-  // Fonction pour basculer l'état "like" d'une offre
   const handleToggleLike = (offerId) => {
     setOffers((prevOffers) =>
       prevOffers.map((offer) =>

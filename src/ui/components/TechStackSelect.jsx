@@ -76,6 +76,11 @@ const TechStackSelect = ({ value, onChange, isView }) => {
             Option: customOption,
             SingleValue: CustomSingleValue,
             MultiValue: CustomMultiValue,
+            DropdownIndicator: () => (
+              <div style={{ color: '#F8F6FE' }}>
+                <i className="fa-solid fa-caret-down text-xs mr-4"></i>
+              </div>
+            ),
           }}
           styles={{
             control: (provided, state) => ({
@@ -128,7 +133,7 @@ const TechStackSelect = ({ value, onChange, isView }) => {
             }),
             indicatorSeparator: (provided) => ({
               ...provided,
-              backgroundColor: '#484451',
+              backgroundColor: '#1c1825',
             }),
             menu: (provided) => ({
               ...provided,

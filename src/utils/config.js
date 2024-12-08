@@ -126,8 +126,18 @@ export const CONFIG_REMOTE_WORK = [
       label: '' 
     },
   ];
+  
+  export const REMOTE_MAP = {
+    ONSITE: 0,
+    ONEDAY: 1,
+    TWODAY: 2,
+    THREEDAY: 3,
+    FOURDAY: 4,
+    ALLDAY: 5,
+    NONE: 1
+  };
 
-export const STATUS_LABELS = {
+  export const STATUS_LABELS = {
     SENDING: 'Envoyé',
     INTERVIEW: 'Contacté',
     PENDING:  'Attente',

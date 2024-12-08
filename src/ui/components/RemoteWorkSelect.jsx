@@ -23,7 +23,7 @@ const RemoteWorkSelect = ({ value, onChange, isView }) => {
   return (
     <div>
       {isView ? (
-        <span className="text-[#7b6f9f]">
+        <span className="text-[#F8F6FE]">
           {options.find(option => option.value === value)?.label}
         </span>
       ) : (
@@ -63,6 +63,10 @@ const RemoteWorkSelect = ({ value, onChange, isView }) => {
                 backgroundColor: '#1c1825',
               },
             }),
+            placeholder: (provided) => ({
+              ...provided,
+              color:'#F8F6FE',
+            }),
             singleValue: (provided) => ({
               ...provided,
               display: 'flex',
@@ -77,7 +81,7 @@ const RemoteWorkSelect = ({ value, onChange, isView }) => {
             }),
             indicatorSeparator: (provided) => ({
               ...provided,
-              backgroundColor: '#484451',
+              backgroundColor: '#1c1825',
             }),
             menu: (provided) => ({
               ...provided,
@@ -90,6 +94,13 @@ const RemoteWorkSelect = ({ value, onChange, isView }) => {
               width: '100%',
               margin: 0,
             }),
+          }}
+          components={{
+            DropdownIndicator: () => (
+              <div style={{ color: '#F8F6FE' }}>
+                <i className="fa-solid fa-caret-down text-xs mr-4"></i>
+              </div>
+            ),
           }}
         />
       )}

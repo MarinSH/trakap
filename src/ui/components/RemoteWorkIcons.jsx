@@ -1,25 +1,16 @@
 import React from 'react';
+import { REMOTE_MAP } from '../../utils/config';
 
 const RemoteWorkIcons = ({ remoteWork }) => {
-  const remoteMap = {
-    ONSITE: 0,
-    ONEDAY: 1,
-    TWODAY: 2,
-    THREEDAY: 3,
-    FOURDAY: 4,
-    ALLDAY: 5,
-    NONE: 1
-  };
-
   const totalIcons = 5;
-  const activeIcons = remoteMap[remoteWork] || 0;
+  const activeIcons = REMOTE_MAP[remoteWork] || 0;
 
   return (
     <div className="flex items-center space-x-2">
       {remoteWork === 'NONE' ? (
         <div className="flex items-center space-x-1">
           <i className="fas fa-circle-question text-lg text-secondary-500"></i>
-          <span className="text-gray-200 text-sm">Non spécifié</span>
+          <span className="text-gray-100 text-sm">Non spécifié</span>
         </div>
       ) : (
         <div className="flex space-x-1">
