@@ -2,7 +2,6 @@ import React from 'react';
 import Select from 'react-select';
 import { CONFIG_TECH_STACK } from '../../utils/config.js';
 
-
 const CustomSingleValue = ({ data }) => (
   <div className="flex items-center space-x-2 text-base-content">
     <i className={`${data.icon} text-xl`} />
@@ -10,10 +9,17 @@ const CustomSingleValue = ({ data }) => (
   </div>
 );
 
-const CustomMultiValue = ({ data }) => (
-  <div className="flex items-center px-2 py-1 bg-[#4E19E0] text-xs text-[#F8F6FE] rounded-full space-x-1 mr-2 mb-2">
+const CustomMultiValue = ({ data, removeProps }) => (
+  <div className="flex items-center px-2 py-1 bg-[#121018] text-xs text-[#F8F6FE] rounded-full space-x-1 mr-2 mb-2">
     <i className={`${data.icon} text-sm`} />
     <span className="text-xs">{data.label}</span>
+    <button 
+      {...removeProps} 
+      className="ml-1 text-xs text-[#F8F6FE] hover:text-warning-500"
+      title="Supprimer"
+    >
+      <i className="fa-solid fa-xmark"></i>
+    </button>
   </div>
 );
 
@@ -70,6 +76,11 @@ const TechStackSelect = ({ value, onChange, isView }) => {
             Option: customOption,
             SingleValue: CustomSingleValue,
             MultiValue: CustomMultiValue,
+            DropdownIndicator: () => (
+              <div style={{ color: '#F8F6FE' }}>
+                <i className="fa-solid fa-caret-down text-xs mr-4"></i>
+              </div>
+            ),
           }}
           styles={{
             control: (provided, state) => ({
@@ -90,7 +101,7 @@ const TechStackSelect = ({ value, onChange, isView }) => {
             }),
             multiValue: (provided) => ({
               ...provided,
-              backgroundColor: '#4E19E0',
+              backgroundColor: '#1c1825',
               color: '#F8F6FE',
               borderRadius: '9999px',
               marginRight: '0.5rem',
@@ -115,24 +126,28 @@ const TechStackSelect = ({ value, onChange, isView }) => {
                 color: '#F8F6FE',
               },
             }),
+            
             dropdownIndicator: (provided) => ({
               ...provided,
               color: '#F8F6FE',
             }),
             indicatorSeparator: (provided) => ({
               ...provided,
-              backgroundColor: '#484451',
+              backgroundColor: '#1c1825',
             }),
             menu: (provided) => ({
               ...provided,
-              backgroundColor: '#1c1825',
+              backgroundColor: '#272334',
               borderColor: '#484451',
               borderRadius: '0.375rem',
             }),
             menuList: (provided) => ({
               ...provided,
-              maxHeight: '300px',  // Limite de la hauteur du menu
-              overflowY: 'auto',    // Permet de défiler si trop de choix
+              maxHeight: '300px',
+              overflowY: 'auto', 
+              '&:hover': {
+                backgroundColor: '#272334',
+                }
             }),
           }}
         />
