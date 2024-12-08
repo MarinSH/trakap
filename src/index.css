@@ -71,3 +71,8 @@
     --color-success-800: #354D00;
     --color-success-900: #1A2600;
   }
+
+  :focus-visible{
+    border: var( --color-secondary-500) 1px solid; 
+    outline: var( --color-secondary-300) 2px solid;
+  }

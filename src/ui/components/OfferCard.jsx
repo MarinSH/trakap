@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import RemoteWorkIcons from './RemoteWorkIcons.jsx';
+import { FEELING_TYPES } from '../../utils/config.js';
 
-export default function OfferCard({ offer, onView, onEdit }) {
+export default function OfferCard({ offer, onView, onLikeToggle }) {
+  const [isLiked, setIsLiked] = useState(offer.isLiked || false);
+
   const handleDragStart = (event) => {
     event.dataTransfer.setData('offerId', offer.id);
     event.target.style.opacity = 0.5;
@@ -22,7 +25,16 @@ export default function OfferCard({ offer, onView, onEdit }) {
   const diffInDays = Math.floor((currentDate - sendDate) / (1000 * 60 * 60 * 24)); 
 
   const isWarning = diffInDays > 10;
+  const feeling = FEELING_TYPES.find((type) => type.value === offer.feelingType);
+
   
+  const toggleLike = (event) => {
+    event.stopPropagation(); 
+    setIsLiked(!isLiked);
+    if (onLikeToggle) { 
+      onLikeToggle(offer.id);
+    }
+  };
 
   return (
     <div
@@ -35,8 +47,14 @@ export default function OfferCard({ offer, onView, onEdit }) {
       <div className="p-4">
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold text-gray-100">
-            <i className="fa-solid fa-bullhorn mr-2"></i>{offer.offerName}
+            <span>{feeling ? feeling.label : 'Aucun ressenti'}</span> {offer.offerName}
           </h3>
+          <button
+            onClick={toggleLike}
+            className={`btn btn-circle ${isLiked ? 'text-warning-500' : 'text-gray-500'}`}
+          >
+            <i className={`text-2xl fa${isLiked ? '-solid' : '-regular'} fa-heart`}></i>
+          </button>
         </div>
       </div>
 
@@ -57,7 +75,6 @@ export default function OfferCard({ offer, onView, onEdit }) {
         <div className="flex flex-wrap mt-2">
           {techChips}
         </div>
-              
       </div>
     </div>
   );

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import OfferCard from '../components/OfferCard.jsx';
-import { CONFIG_REMOTE_WORK, STATUS_LABELS, CONTRACT_TYPES, CONFIG_TECH_STACK } from '../../utils/config.js';
+import { STATUS_LABELS, CONTRACT_TYPES, CONFIG_TECH_STACK } from '../../utils/config.js';
 import RemoteWorkSelect from '../components/RemoteWorkSelect.jsx';
-import TechStackSelect from '../components/TechStackSelect.jsx';
 
 export default function OfferList() {
   const [offers, setOffers] = useState([]);
@@ -16,18 +15,44 @@ export default function OfferList() {
 
   useEffect(() => {
     fetchOffers();
+    const savedColumns = JSON.parse(localStorage.getItem('collapsedColumns'));
+    const savedFilters = JSON.parse(localStorage.getItem('filters'));
+    
+    if (savedColumns) {
+      setCollapsedColumns(savedColumns);
+    } else {
+      const initialCollapsedState = Object.keys(STATUS_LABELS).reduce((acc, status) => {
+        acc[status] = false;
+        return acc;
+      }, {});
+      setCollapsedColumns(initialCollapsedState);
+    }
+
+    if (savedFilters) {
+      setSearchQuery(savedFilters.searchQuery || '');
+      setSelectedRemoteWork(savedFilters.selectedRemoteWork || '');
+      setSelectedContractType(savedFilters.selectedContractType || '');
+      setSelectedTechStack(savedFilters.selectedTechStack || '');
+    }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('collapsedColumns', JSON.stringify(collapsedColumns));
+  }, [collapsedColumns]);
+
+  useEffect(() => {
+    const filters = {
+      searchQuery,
+      selectedRemoteWork,
+      selectedContractType,
+      selectedTechStack,
+    };
+    localStorage.setItem('filters', JSON.stringify(filters));
+  }, [searchQuery, selectedRemoteWork, selectedContractType, selectedTechStack]);
 
   async function fetchOffers() {
     const fetchedOffers = await window.api.getOffers();
     setOffers(fetchedOffers);
-
-    const initialCollapsedState = Object.keys(STATUS_LABELS).reduce((acc, status) => {
-      acc[status] = fetchedOffers.filter(offer => offer.status === status).length === 0;
-      return acc;
-    }, {});
-
-    setCollapsedColumns(initialCollapsedState);
   }
 
   const handleViewOffer = (id) => {
@@ -96,13 +121,22 @@ export default function OfferList() {
     acc[offer.status].push(offer);
     return acc;
   }, {});
+
+  const handleToggleLike = (offerId) => {
+    setOffers((prevOffers) =>
+      prevOffers.map((offer) =>
+        offer.id === offerId ? { ...offer, isLiked: !offer.isLiked } : offer
+      )
+    );
+  };
+
   return (
     <section className="py-8">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-bold mb-6">Kanban des offres</h1>
 
         <div className="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div>
+          <div>
             <button
               onClick={resetFilters}
               className="btn bg-gradient-to-r from-primary-500 to-secondary-500"
@@ -120,10 +154,10 @@ export default function OfferList() {
             />
           </div>
           <div>
-          <RemoteWorkSelect 
-            value={selectedRemoteWork}
-            onChange={(value) => setSelectedRemoteWork(value)}
-          />
+            <RemoteWorkSelect 
+              value={selectedRemoteWork}
+              onChange={(value) => setSelectedRemoteWork(value)}
+            />
           </div>
           <div>
             <select
@@ -153,10 +187,9 @@ export default function OfferList() {
               ))}
             </select>
           </div>
-          
         </div>
 
-        <div className="flex justify-between space-x-4">
+        <div className="flex justify-between space-x-2">
           {Object.keys(STATUS_LABELS).map(status => (
             <div
               key={status}
@@ -164,37 +197,37 @@ export default function OfferList() {
               onDrop={(event) => handleDrop(event, status)}
               onDragOver={handleDragOver}
             >
-              <div className={`p-2 ${statusGradients[status]}  rounded-t-lg flex h-14 items-center justify-between border-b border-gray-600`}>
-                <h2 className="text-xl font-semibold pl-4 text-gray-100">
-                  {collapsedColumns[status] ? '' : STATUS_LABELS[status]}
-                </h2>
-                <button
-                  onClick={() => toggleCollapse(status)}
-                  className="text-gray-100 mr-6"
-                >
-                  <i className={`fa ${collapsedColumns[status] ? 'fa-chevron-right' : 'fa-chevron-left'}`}></i>
-                </button>
+              <div
+                onClick={() => toggleCollapse(status)}
+                className={`p-2 ${statusGradients[status]} rounded-t-lg flex h-14 items-center justify-between border-b border-gray-600 cursor-pointer`}
+              >
+                <div className="flex items-center">
+                  <p className="text-center text-gray-100 flex items-center mr-4">
+                    {groupedOffers[status]?.length || 0} <i className="fa-solid fa-folder-open ml-1"></i>
+                  </p>
+
+                  <h2 className="text-xl font-semibold text-gray-100">
+                    {collapsedColumns[status] ? '' : STATUS_LABELS[status]}
+                  </h2>
+                </div>
+
+                <i
+                  className={`fa ${collapsedColumns[status] ? 'fa-chevron-right' : 'fa-chevron-left'} text-gray-100 mr-6`}
+                ></i>
               </div>
 
               <div className="kanban-cards m-4 space-y-4 flex-1">
-                {collapsedColumns[status] ? (
-                  groupedOffers[status]?.length > 0 && (
-                    <p className="text-center text-gray-300">
-                      {groupedOffers[status]?.length} <i className="fa-solid fa-folder-open"></i>
-                    </p>
-                  )
-                ) : (
-                  groupedOffers[status]?.map(offer => (
-                    <OfferCard
-                      key={offer.id}
-                      offer={offer}
-                      onView={handleViewOffer}
-                      onEdit={handleEditOffer}
-                      onStatusChange={handleStatusChange}
-                      status={status}
-                    />
-                  ))
-                )}
+                {!collapsedColumns[status] && groupedOffers[status]?.map(offer => (
+                  <OfferCard
+                    key={offer.id}
+                    offer={offer}
+                    onView={handleViewOffer}
+                    onEdit={handleEditOffer}
+                    onStatusChange={handleStatusChange}
+                    onLikeToggle={handleToggleLike} 
+                    status={status}
+                  />
+                ))}
               </div>
             </div>
           ))}
