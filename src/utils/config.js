@@ -123,7 +123,7 @@ export const CONFIG_REMOTE_WORK = [
     },
     { 
       value: 'NONE', 
-      label: 'Sans information' 
+      label: '' 
     },
   ];
 

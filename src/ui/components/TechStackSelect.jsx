@@ -10,7 +10,7 @@ const CustomSingleValue = ({ data }) => (
 );
 
 const CustomMultiValue = ({ data, removeProps }) => (
-  <div className="flex items-center px-2 py-1 bg-[#4E19E0] text-xs text-[#F8F6FE] rounded-full space-x-1 mr-2 mb-2">
+  <div className="flex items-center px-2 py-1 bg-[#121018] text-xs text-[#F8F6FE] rounded-full space-x-1 mr-2 mb-2">
     <i className={`${data.icon} text-sm`} />
     <span className="text-xs">{data.label}</span>
     <button 
@@ -18,7 +18,7 @@ const CustomMultiValue = ({ data, removeProps }) => (
       className="ml-1 text-xs text-[#F8F6FE] hover:text-warning-500"
       title="Supprimer"
     >
-      ×
+      <i className="fa-solid fa-xmark"></i>
     </button>
   </div>
 );
@@ -96,7 +96,7 @@ const TechStackSelect = ({ value, onChange, isView }) => {
             }),
             multiValue: (provided) => ({
               ...provided,
-              backgroundColor: '#4E19E0',
+              backgroundColor: '#1c1825',
               color: '#F8F6FE',
               borderRadius: '9999px',
               marginRight: '0.5rem',
@@ -121,6 +121,7 @@ const TechStackSelect = ({ value, onChange, isView }) => {
                 color: '#F8F6FE',
               },
             }),
+            
             dropdownIndicator: (provided) => ({
               ...provided,
               color: '#F8F6FE',
@@ -131,7 +132,7 @@ const TechStackSelect = ({ value, onChange, isView }) => {
             }),
             menu: (provided) => ({
               ...provided,
-              backgroundColor: '#1c1825',
+              backgroundColor: '#272334',
               borderColor: '#484451',
               borderRadius: '0.375rem',
             }),
@@ -139,6 +140,9 @@ const TechStackSelect = ({ value, onChange, isView }) => {
               ...provided,
               maxHeight: '300px',
               overflowY: 'auto', 
+              '&:hover': {
+                backgroundColor: '#272334',
+                }
             }),
           }}
         />

@@ -52,7 +52,7 @@ const RemoteWorkSelect = ({ value, onChange, isView }) => {
             }),
             option: (provided, state) => ({
               ...provided,
-              backgroundColor: state.isSelected ? '#484451' : '#1c1825',
+              backgroundColor: state.isSelected ? '#484451' : '#272334',
               color: '#F8F6FE',
               padding: '0.5rem',
               display: 'flex',
@@ -60,7 +60,7 @@ const RemoteWorkSelect = ({ value, onChange, isView }) => {
               fontSize: '0.875rem',
               cursor: 'pointer',
               '&:hover': {
-                backgroundColor: '#272334',
+                backgroundColor: '#1c1825',
               },
             }),
             singleValue: (provided) => ({
@@ -81,7 +81,7 @@ const RemoteWorkSelect = ({ value, onChange, isView }) => {
             }),
             menu: (provided) => ({
               ...provided,
-              backgroundColor: '#1c1825',
+              backgroundColor: '#272334',
               borderColor: '#484451',
               borderRadius: '0.375rem',
             }),
