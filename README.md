@@ -1,8 +1,7 @@
 ## Tech Stack
 
 - React
-- React dom
-- React router
+- DaisyUI
 - Tailwind CSS
 - Electron
 
@@ -14,8 +13,8 @@
 ## Installation
 
 ```sh
-git clone https://github.com/MarinSH/app-trakap
-cd template-electron-react
+git clone https://github.com/MarinSH/trakap.git
+cd trakap
 npm install
 npm start
 npm run package
