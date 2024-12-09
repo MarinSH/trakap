@@ -224,7 +224,7 @@ export default function OfferList() {
                     onView={handleViewOffer}
                     onEdit={handleEditOffer}
                     onStatusChange={handleStatusChange}
-                    onLikeToggle={handleToggleLike} 
+                    onLikeToggle={handleToggleLike}
                     status={status}
                   />
                 ))}
