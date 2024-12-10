@@ -21,6 +21,11 @@ export default function AppNavbar() {
                             Voir les offres
                         </Link>
                     )}
+                    {location.pathname !== '/calendar' && (
+                        <Link to="/calendar" className="btn btn-base-400">
+                            Voir le calendrier
+                        </Link>
+                    )}
                     {location.pathname !== '/offer/new' && (
                         <Link to="/offer/new" className="btn bg-gradient-to-r from-primary-500 to-secondary-500">
                             Ajouter une offre

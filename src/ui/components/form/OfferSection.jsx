@@ -3,7 +3,7 @@ import RemoteWorkSelect from '../RemoteWorkSelect.jsx';
 import TechStackSelect from '../TechStackSelect.jsx';
 import { CONFIG_TECH_STACK, CONTRACT_TYPES } from '../../../utils/config.js';
 
-const OfferSection = ({ offer, setOffer, handleInputChange, isView }) => {
+export default function OfferSection({ offer, setOffer, handleInputChange, isView }) {
     const [remoteWork, setRemoteWork] = useState(offer.remoteWork); 
     const [techStack, setTechStack] = useState(offer.techStack);  
 
@@ -186,5 +186,3 @@ const OfferSection = ({ offer, setOffer, handleInputChange, isView }) => {
     </section>
     );
 };
-
-export default OfferSection;

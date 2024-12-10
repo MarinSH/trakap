@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ImageUploader = ({ onImageUpload, isView, initialImageData }) => {
+export default function ImageUploader({ onImageUpload, isView, initialImageData }) {
     const [imageData, setImageData] = useState(initialImageData || '');
     const [dragging, setDragging] = useState(false);
 
@@ -144,5 +144,3 @@ const ImageUploader = ({ onImageUpload, isView, initialImageData }) => {
         </div>
     );
 };
-
-export default ImageUploader;

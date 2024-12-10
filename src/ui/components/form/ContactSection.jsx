@@ -1,7 +1,7 @@
 import React from 'react';
 import { FEELING_TYPES } from '../../../utils/config';
 
-const ContactSection = ({ offer, handleInputChange, isView }) => {
+export default function ContactSection({ offer, handleInputChange, isView }) {
     return (
       <section className="mb-8 border-2 border-gray-500 rounded-lg p-8">
           <h3 className="text-2xl font-bold mb-4">Contact</h3>
@@ -63,6 +63,4 @@ const ContactSection = ({ offer, handleInputChange, isView }) => {
         </section>
     );
   };
-  
-  export default ContactSection;
   

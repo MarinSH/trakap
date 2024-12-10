@@ -143,7 +143,7 @@ export const OfferForm = ({ offerData = {}, onSubmit, isEdit = false, isView = f
 
               {offer.showInterviewDate && (
                 <input
-                  type="date"
+                  type="datetime-local"
                   name="interviewDate"
                   value={offer.interviewDate || ''} 
                   onChange={handleInputChange}

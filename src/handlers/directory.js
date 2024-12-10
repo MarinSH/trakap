@@ -2,6 +2,7 @@ import { dialog, ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import Store from 'electron-store';
+import { fileLoad } from '../utils/file';
 
 export function ipcDirectory() {
     const store = new Store();
@@ -23,7 +24,7 @@ export function ipcDirectory() {
                 return null;
             }
         } catch (error) {
-            console.error('Error in check-directory-offers:', error);
+            console.error('Error in check-directory:', error);
             throw error;
         }
     });
@@ -53,7 +54,16 @@ export function ipcDirectory() {
             store.set('dataPath', newDataPath);
             return newDataPath;
         } catch (error) {
-            console.error('Error in select-directory-offers:', error);
+            console.error('Error in select-directory:', error);
+            throw error;
+        }
+    });
+
+    ipcMain.handle('read-directory', async () => {
+        try {
+            return fileLoad();
+        } catch (error) {
+            console.error('Error in read-directory:', error);
             throw error;
         }
     });
@@ -98,7 +108,7 @@ export function ipcDirectory() {
                 fs.rmdirSync(oldTrakapDirectory);
             }
         } catch (error) {
-            console.error('Error in reset-directory-offers:', error);
+            console.error('Error in reset-directory:', error);
             throw error;
         }
     }); 

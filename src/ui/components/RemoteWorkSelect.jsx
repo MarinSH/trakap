@@ -3,7 +3,7 @@ import Select from 'react-select';
 import RemoteWorkIcons from './RemoteWorkIcons.jsx';
 import { CONFIG_REMOTE_WORK } from '../../utils/config.js';
 
-const RemoteWorkSelect = ({ value, onChange, isView }) => {
+export default function RemoteWorkSelect({ value, onChange, isView }) {
   const options = CONFIG_REMOTE_WORK.map((option) => ({
     value: option.value,
     label: (
@@ -107,5 +107,3 @@ const RemoteWorkSelect = ({ value, onChange, isView }) => {
     </div>
   );
 };
-
-export default RemoteWorkSelect;
