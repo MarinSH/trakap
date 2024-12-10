@@ -2,6 +2,7 @@ import { dialog, ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import Store from 'electron-store';
+import { fileLoad } from '../utils/file';
 
 export function ipcDirectory() {
     const store = new Store();
@@ -54,6 +55,15 @@ export function ipcDirectory() {
             return newDataPath;
         } catch (error) {
             console.error('Error in select-directory-offers:', error);
+            throw error;
+        }
+    });
+
+    ipcMain.handle('read-directory', async () => {
+        try {
+            return fileLoad();
+        } catch (error) {
+            console.error('Error in read-directory IPC:', error);
             throw error;
         }
     });

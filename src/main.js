@@ -20,7 +20,8 @@ const createWindow = () => {
   });
 
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-  // mainWindow.webContents.openDevTools();
+  //TODO: comment and uncomment here
+  mainWindow.webContents.openDevTools();
 };
 
 app.whenReady().then(async () => {

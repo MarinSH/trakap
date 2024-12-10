@@ -3,6 +3,7 @@ import { contextBridge, ipcRenderer } from "electron";
 contextBridge.exposeInMainWorld('api', {
     checkDirectory: () => ipcRenderer.invoke('check-directory'),
     selectDirectory: () => ipcRenderer.invoke('select-directory'),
+    readDirectory: () => ipcRenderer.invoke('read-directory'),
     resetDirectory: () => ipcRenderer.invoke('reset-directory'),
     
     getOffers: () => ipcRenderer.invoke('get-offers'),

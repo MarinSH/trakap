@@ -127,7 +127,7 @@ export const CONFIG_REMOTE_WORK = [
     },
   ];
   
-  export const REMOTE_MAP = {
+export const REMOTE_MAP = {
     ONSITE: 0,
     ONEDAY: 1,
     TWODAY: 2,
@@ -137,12 +137,20 @@ export const CONFIG_REMOTE_WORK = [
     NONE: 1
   };
 
-  export const STATUS_LABELS = {
+export const STATUS_LABELS = {
     SENDING: 'Envoyé',
     INTERVIEW: 'Contacté',
     PENDING:  'Attente',
     REJECTED:  'Refusé',
     ACCEPTED: 'Accepté',
+};
+
+export const STATUS_GRADIENTS = {
+  SENDING: 'bg-gradient-to-r from-primary-500 to-primary-700',
+  INTERVIEW: 'bg-gradient-to-r from-secondary-500 to-secondary-700',
+  PENDING: 'bg-gradient-to-r from-gray-500 to-gray-700',
+  ACCEPTED: 'bg-gradient-to-r from-success-500 to-success-700',
+  REJECTED: 'bg-gradient-to-r from-warning-500 to-warning-700',
 };
 
 export const CONTRACT_TYPES = [
