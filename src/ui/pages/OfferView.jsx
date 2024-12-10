@@ -55,7 +55,7 @@ export default function OfferView() {
       <h1 className="text-3xl font-bold">Détails de l'offre</h1>
       <div className="ml-auto flex space-x-2">
         <button
-          className="btn bg-gradient-to-r from-primary-500 to-secondary-500 text-sm"
+          className="btn bg-gradient-to-r from-secondary-500 to-secondary-500 text-sm"
           onClick={() => handleDuplicateOffer(offer.id)}
         >
           <i className="fa-solid fa-copy"></i>

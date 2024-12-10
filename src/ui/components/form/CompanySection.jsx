@@ -1,7 +1,7 @@
 import React from 'react';
 import { SCHEDULE_TYPES } from '../../../utils/config';
 
-const CompanySection = ({ offer, handleInputChange, isView }) => {
+export default function CompanySection({ offer, handleInputChange, isView }) {
     return (
         <section className="mb-8 border-2 border-gray-500 rounded-lg p-8">
         <h3 className="text-2xl font-bold mb-4">Entreprise</h3>
@@ -100,5 +100,3 @@ const CompanySection = ({ offer, handleInputChange, isView }) => {
         </section>
     );
 };
-
-export default CompanySection;

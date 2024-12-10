@@ -47,6 +47,10 @@ export default function AppHome() {
         navigate('/offer');
     }
 
+    function goToCalendar() {
+        navigate('/calendar');
+    }
+
     return (
         <section>
             <div className="mx-auto max-w-screen-xl px-4 py-32 flex h-screen items-center">
@@ -69,8 +73,11 @@ export default function AppHome() {
                                 Vous avez sélectionné ce répertoire : <strong>{storedDirectoryPath}</strong>, vous pouvez donc maintenant utiliser Trakap 🎉
                             </p>
                             <div className="mt-8 flex flex-wrap justify-center gap-4">
+                                <button className="btn btn-primary" onClick={goToCalendar}>
+                                    Voir le calendrier
+                                </button>
                                 <button className="btn btn-primary" onClick={goToOffers}>
-                                    Voir mes offres
+                                    Voir les offres
                                 </button>
                                 <button className="btn bg-gradient-to-r from-primary-500 to-secondary-500" onClick={resetDirectory}>
                                     Réinitialiser le répertoire
