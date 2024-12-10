@@ -23,7 +23,7 @@ const CustomMultiValue = ({ data, removeProps }) => (
   </div>
 );
 
-const TechStackSelect = ({ value, onChange, isView }) => {
+export default function TechStackSelect ({ value, onChange, isView }) {
   const options = CONFIG_TECH_STACK.map((tech) => ({
     value: tech,
     label: tech,
@@ -155,5 +155,3 @@ const TechStackSelect = ({ value, onChange, isView }) => {
     </div>
   );
 };
-
-export default TechStackSelect;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import OfferCard from '../components/OfferCard.jsx';
-import { STATUS_LABELS, CONTRACT_TYPES, CONFIG_TECH_STACK } from '../../utils/config.js';
+import { STATUS_LABELS, CONTRACT_TYPES, CONFIG_TECH_STACK, STATUS_GRADIENTS } from '../../utils/config.js';
 import RemoteWorkSelect from '../components/RemoteWorkSelect.jsx';
 
 export default function OfferList() {
@@ -93,14 +93,6 @@ export default function OfferList() {
     setSelectedRemoteWork('');
     setSelectedContractType('');
     setSelectedTechStack('');
-  };
-
-  const statusGradients = {
-    SENDING: 'bg-gradient-to-r from-primary-500 to-primary-700',
-    INTERVIEW: 'bg-gradient-to-r from-secondary-500 to-secondary-700',
-    PENDING: 'bg-gradient-to-r from-gray-500 to-gray-700',
-    ACCEPTED: 'bg-gradient-to-r from-success-500 to-success-700',
-    REJECTED: 'bg-gradient-to-r from-warning-500 to-warning-700',
   };
 
   const filteredOffers = offers.filter(offer => {
@@ -199,7 +191,7 @@ export default function OfferList() {
             >
               <div
                 onClick={() => toggleCollapse(status)}
-                className={`p-2 ${statusGradients[status]} rounded-t-lg flex h-14 items-center justify-between border-b border-gray-600 cursor-pointer`}
+                className={`p-2 ${STATUS_GRADIENTS[status]} rounded-t-lg flex h-14 items-center justify-between border-b border-gray-600 cursor-pointer`}
               >
                 <div className="flex items-center">
                   <p className="text-center text-gray-100 flex items-center mr-4">

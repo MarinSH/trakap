@@ -1,7 +1,7 @@
 import React from 'react';
 import { REMOTE_MAP } from '../../utils/config';
 
-const RemoteWorkIcons = ({ remoteWork }) => {
+export default function RemoteWorkIcons({ remoteWork }) {
   const totalIcons = 5;
   const activeIcons = REMOTE_MAP[remoteWork] || 0;
 
@@ -27,5 +27,3 @@ const RemoteWorkIcons = ({ remoteWork }) => {
     </div>
   );
 };
-
-export default RemoteWorkIcons;

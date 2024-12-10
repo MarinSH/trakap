@@ -1,7 +1,11 @@
 import React from 'react';
 import { OfferForm } from '../components/OfferForm.jsx';
+import { useLocation } from 'react-router';
 
 export default function OfferAdd() {
+  const location = useLocation();
+  const offerData = location.state?.offerData || {};
+
   const handleAddOffer = async (offer) => {
     try {
       await window.api.addOffer(offer);
@@ -17,7 +21,7 @@ export default function OfferAdd() {
           <h1 className="text-3xl font-bold">Ajouter une nouvelle offre</h1>
         </div>
 
-        <OfferForm onSubmit={handleAddOffer} isEdit={false} isView={false} />
+        <OfferForm offerData={offerData} onSubmit={handleAddOffer} isEdit={false} isView={false} />
       </div>
     </section>
   );

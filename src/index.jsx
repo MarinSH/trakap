@@ -10,6 +10,7 @@ import OfferView from './ui/pages/OfferView.jsx';
 import AppNavbar from './ui/components/AppNavbar.jsx';
 import { useEffect } from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import AppCalendar from './ui/pages/AppCalendar.jsx';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ const Index = () => {
       <AppNavbar />
       <Routes>
         <Route path="/" element={<AppHome />} />
+        <Route path="/calendar" element={<AppCalendar />} />
         <Route path="/offer" element={<OfferList />} />
         <Route path="/offer/new" element={<OfferAdd />} />
         <Route path="/offer/edit/:offerId" element={<OfferEdit />} />
