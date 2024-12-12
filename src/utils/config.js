@@ -130,7 +130,7 @@ export const CONFIG_REMOTE_WORK = [
       value: 'NONE', 
       label: '' 
     },
-  ];
+];
   
 export const REMOTE_MAP = {
     ONSITE: 0,
@@ -140,7 +140,7 @@ export const REMOTE_MAP = {
     FOURDAY: 4,
     ALLDAY: 5,
     NONE: 1
-  };
+};
 
 export const STATUS_LABELS = {
     SENDING: 'Envoyé',
