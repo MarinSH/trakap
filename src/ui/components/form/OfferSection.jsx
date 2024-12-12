@@ -120,7 +120,7 @@ export default function OfferSection({ offer, setOffer, handleInputChange, isVie
         </div>
 
         <div className="space-y-2">
-            <label>Platform où vous avez trouvé l'offre :</label>
+            <label>Platforme où vous avez trouvé l'offre :</label>
             <input
             type="text"
             name="offerSource"
