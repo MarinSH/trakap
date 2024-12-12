@@ -3,7 +3,7 @@ import { fileLoad, fileSave } from "../utils/file";
 import { v4 as uuidv4 } from 'uuid';
 
 export function ipcOffer() {
-    ipcMain.handle('get-offers', () => {
+    ipcMain.handle('get-offers', async () => {
         try {
             const data = fileLoad();
             return data.offers;
@@ -13,7 +13,7 @@ export function ipcOffer() {
         }
     });
 
-    ipcMain.handle('get-offer-by-id', (event, offerId) => {
+    ipcMain.handle('get-offer-by-id', async (event, offerId) => {
         try {
             const data = fileLoad();
             const offer = data.offers.find(offer => offer.id === offerId);
@@ -56,7 +56,7 @@ export function ipcOffer() {
         }
     });
 
-    ipcMain.handle('update-offer', (event, updatedOffer) => {
+    ipcMain.handle('update-offer', async (event, updatedOffer) => {
         try {
             const data = fileLoad();
             const index = data.offers.findIndex(offer => offer.id === updatedOffer.id);
@@ -74,7 +74,7 @@ export function ipcOffer() {
         }
     });
 
-    ipcMain.handle('delete-offer', (event, offerId) => {
+    ipcMain.handle('delete-offer', async (event, offerId) => {
         try {
             const data = fileLoad();
             const index = data.offers.findIndex(offer => offer.id === offerId);
